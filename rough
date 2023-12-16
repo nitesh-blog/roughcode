@@ -1,1 +1,51 @@
 roughcode
+
+
+
+import React, { useState, useEffect } from 'react';
+import data1 from './data1.json'; // Import JSON file
+import data2 from './data2.json'; // Import another JSON file
+
+const DataDisplayComponent = () => {
+  const [selectedData, setSelectedData] = useState([]);
+  const [selectedOption, setSelectedOption] = useState('data1'); // Default selection
+
+  const fetchData = (file) => {
+    const selectedJsonData = {
+      data1,
+      data2,
+      // Add more imports as needed
+    };
+
+    setSelectedData(selectedJsonData[file]);
+  };
+
+  useEffect(() => {
+    fetchData(selectedOption);
+  }, [selectedOption]);
+
+  const handleSelectChange = (e) => {
+    setSelectedOption(e.target.value);
+  };
+
+  return (
+    <div>
+      <select value={selectedOption} onChange={handleSelectChange}>
+        <option value="data1">Data Set 1</option>
+        <option value="data2">Data Set 2</option>
+        {/* Add more options as needed */}
+      </select>
+
+      {selectedData.map((item, index) => (
+        <div key={index}>
+          <p>Index: {index}</p>
+          <p>Question: {item.question}</p>
+          <p>Answer: {item.answer}</p>
+          <p>Keywords: {item.Keyword.join(', ')}</p>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default DataDisplayComponent;
