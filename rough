@@ -416,6 +416,142 @@ function AdminPage() {
         </tbody>
       </Table>
 
+
+
+---++-+-+--+-+-+--+--+-
+
+import React, { useState, useEffect } from 'react';
+import { Table, Pagination, DropdownButton, Dropdown } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Calico from "../assest/Calico.json";
+import DataTree from "../assest/DataTree.json";
+import LND from "../assest/LND.json";
+
+function AdminPage() {
+  const [selectedData, setSelectedData] = useState([]);
+  const [selectedOption, setSelectedOption] = useState('Calico'); // Default selection
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+
+  const fetchData = (file) => {
+    const selectedJsonData = {
+      Calico,
+      DataTree,
+      LND,
+      // Add more imports as needed
+    };
+
+    setSelectedData(selectedJsonData[file]);
+    setCurrentPage(1); // Reset to the first page when changing data
+  };
+
+  useEffect(() => {
+    fetchData(selectedOption);
+  }, [selectedOption]);
+
+  const handleSelectChange = (e) => {
+    setSelectedOption(e.target.value);
+  };
+
+  const handleEdit = (index) => {
+    // Implement edit functionality here
+    console.log(`Editing item at index ${index}`);
+  };
+
+  const handleDelete = (index) => {
+    // Implement delete functionality here
+    console.log(`Deleting item at index ${index}`);
+  };
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, Math.ceil(selectedData.length / itemsPerPage)));
+  };
+
+  const handleShowRowsChange = (value) => {
+    setItemsPerPage(value);
+    setCurrentPage(1); // Reset to the first page when changing the number of items per page
+  };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = selectedData.slice(indexOfFirstItem, indexOfLastItem);
+
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(selectedData.length / itemsPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
+  return (
+    <div>
+      <br />
+      <span>Select Vendor : </span>
+      <select className='btn btn-outline-dark' value={selectedOption} onChange={handleSelectChange}>
+        <option value="Calico">Calico</option>
+        <option value="DataTree">DataTree</option>
+        <option value="LND">LND</option>
+        {/* Add more options as needed */}
+      </select>
+      <br />
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>Index</th>
+            <th>Question</th>
+            <th>Answer</th>
+            <th>Keywords</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {currentItems.map((item, index) => (
+            <tr key={index}>
+              <td>{index + indexOfFirstItem}</td>
+              <td>{item.question}</td>
+              <td>{item.answer}</td>
+              <td>{item.keyword.join(', ')}</td>
+              <td>
+                <button className="btn btn-primary" onClick={() => handleEdit(index)}>
+                  Edit
+                </button>
+                <button className="btn btn-danger ms-2" onClick={() => handleDelete(index)}>
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+
+      <div className="d-flex justify-content-between">
+        <Pagination>
+          <Pagination.Prev onClick={handlePreviousPage} />
+          {pageNumbers.map((number) => (
+            <Pagination.Item key={number} active={number === currentPage} onClick={() => setCurrentPage(number)}>
+              {number}
+            </Pagination.Item>
+          ))}
+          <Pagination.Next onClick={handleNextPage} />
+        </Pagination>
+
+        <DropdownButton id="dropdown-basic-button" title={`Show ${itemsPerPage} Rows`}>
+          {[5, 10, 20].map((value) => (
+            <Dropdown.Item key={value} onClick={() => handleShowRowsChange(value)}>
+              {value}
+            </Dropdown.Item>
+          ))}
+        </DropdownButton>
+      </div>
+    </div>
+  );
+}
+
+export default AdminPage;
+
       <Pagination>
         {pageNumbers.map((number) => (
           <Pagination.Item key={number} active={number === currentPage} onClick={() => setCurrentPage(number)}>
