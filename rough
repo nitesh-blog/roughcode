@@ -72,3 +72,75 @@ const handleEdit = (index) => {
     // Implement delete functionality here
     console.log(`Deleting item at index ${index}`);
   };
+
+
+
+
+
+
+import React, { useState, useEffect } from 'react';
+import Calico from "../assest/Calico.json"
+import DataTree from "../assest/DataTree.json"
+import LND from "../assest/LND.json"
+
+function AdminPage() {
+  const [selectedData, setSelectedData] = useState([]);
+  const [selectedOption, setSelectedOption] = useState('Calico'); // Default selection
+
+  const fetchData = (file) => {
+    const selectedJsonData = {
+     Calico,DataTree,LND,
+      // Add more imports as needed
+    };
+
+    setSelectedData(selectedJsonData[file]);
+  };
+
+  useEffect(() => {
+    fetchData(selectedOption);
+  }, [selectedOption]);
+
+  const handleSelectChange = (e) => {
+    setSelectedOption(e.target.value);
+  };
+
+  return (
+    <div>
+      <br/>
+      <span>Select Vendor : </span>
+      <select className='btn btn-outline-dark' value={selectedOption} onChange={handleSelectChange}>
+        <option value="Calico">Calico</option>
+        <option value="DataTree">DataTree</option>
+        <option value="LND">LND</option>
+        {/* Add more options as needed */}
+      </select>
+      <br/>
+    <table className='table table-striped'>
+      <thead>
+        <tr>
+          <th>Index</th>
+          <th>Question</th>
+          <th >Answer</th>
+          <th>Keywords</th>
+        </tr>
+      </thead>
+
+    <tbody>
+    
+
+      {selectedData.map((item, index) => (
+        <tr key={index}>
+          <td>{index}</td>
+          <td> {item.question}</td>
+          <td>{item.answer}</td>
+          <td>{item.keyword.join(', ')}</td>
+        </tr>
+      ))}
+      </tbody>
+      </table>
+    </div>
+  );
+}
+ 
+export default AdminPage;
+ 
