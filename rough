@@ -1,4 +1,108 @@
 roughcode
+import React, { useState } from 'react';
+
+const initialFormData = {
+  mainQuestion: '',
+  answer: '',
+  actionToRun: '',
+  variations: [
+    {
+      variationList: '',
+      variationId: 0,
+    },
+  ],
+};
+
+const YourFormComponent = () => {
+  const [formData, setFormData] = useState(initialFormData);
+
+  const handleInputChange = (e, index) => {
+    const { name, value } = e.target;
+    if (name === 'variationList') {
+      const updatedVariations = [...formData.variations];
+      updatedVariations[index][name] = value;
+      setFormData({
+        ...formData,
+        variations: updatedVariations,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Add your form submission logic here
+    console.log('Form submitted:', formData);
+  };
+
+  const handleAddVariation = () => {
+    setFormData({
+      ...formData,
+      variations: [
+        ...formData.variations,
+        {
+          variationList: '',
+          variationId: formData.variations.length,
+        },
+      ],
+    });
+  };
+
+  const handleRemoveVariation = (index) => {
+    const updatedVariations = formData.variations.filter((_, i) => i !== index);
+    setFormData({
+      ...formData,
+      variations: updatedVariations,
+    });
+  };
+
+  const isFormValid = () => {
+    // Add your form validation logic here
+    return formData.mainQuestion !== '' && formData.answer !== '' && formData.actionToRun !== '';
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <label>Main Question:</label>
+      <input type="text" name="mainQuestion" value={formData.mainQuestion} onChange={handleInputChange} />
+
+      <label>Answer:</label>
+      <input type="text" name="answer" value={formData.answer} onChange={handleInputChange} />
+
+      <label>Action to Run:</label>
+      <input type="text" name="actionToRun" value={formData.actionToRun} onChange={handleInputChange} />
+
+      <label>Variations:</label>
+      {formData.variations.map((variation, index) => (
+        <div key={index}>
+          <input
+            type="text"
+            name="variationList"
+            value={variation.variationList}
+            onChange={(e) => handleInputChange(e, index)}
+          />
+          <button type="button" onClick={() => handleRemoveVariation(index)}>
+            Remove Variation
+          </button>
+        </div>
+      ))}
+      <button type="button" onClick={handleAddVariation}>
+        Add Variation
+      </button>
+
+      <button type="submit" disabled={!isFormValid()}>
+        Submit
+      </button>
+    </form>
+  );
+};
+
+export default YourFormComponent;
+--+++++++++++
 
 {
   "mainQuestion": "string",
