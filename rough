@@ -1,7 +1,17 @@
 roughcode
 
-
-
+{
+  "mainQuestion": "string",
+  "answer": "string",
+  "actionToRun": "string",
+  "variations": [
+    {
+      "variationList": "string",
+      "variationId": 0
+    }
+  ]
+}
+----------------------------------------
 import React, { useState, useEffect } from 'react';
 import data1 from './data1.json'; // Import JSON file
 import data2 from './data2.json'; // Import another JSON file
