@@ -1,4 +1,94 @@
 roughcode
+// edit.js
+import React, { useState, useEffect } from 'react';
+import { getQuestions, updateQuestion } from '../api';
+
+function EditPage({ selectedOption, questionId }) {
+  const [questionData, setQuestionData] = useState({});
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const question = await getQuestions(selectedOption);
+        const selectedQuestion = question.find(q => q.questionId === questionId);
+        setQuestionData(selectedQuestion);
+      } catch (error) {
+        console.error('Error fetching question for editing:', error);
+      }
+    };
+
+    fetchData();
+  }, [selectedOption, questionId]);
+
+  const handleUpdate = async () => {
+    try {
+      const formData = {
+        mainQuestion: questionData.mainQuestion,
+        answer: questionData.answer,
+        actionToRun: questionData.actionToRun,
+        variations: questionData.variations.map((variation) => ({
+          variationList: variation.variationList,
+          variationId: variation.variationId,
+        })),
+      };
+
+      await updateQuestion(selectedOption, questionId, formData);
+      // Add any additional logic or redirect to the admin page after successful update
+    } catch (error) {
+      console.error('Error updating question:', error);
+    }
+  };
+
+  return (
+    <div>
+      <label>Main Question:</label>
+      <input
+        type="text"
+        value={questionData.mainQuestion || ''}
+        onChange={(e) => setQuestionData({ ...questionData, mainQuestion: e.target.value })}
+      />
+
+      <label>Answer:</label>
+      <input
+        type="text"
+        value={questionData.answer || ''}
+        onChange={(e) => setQuestionData({ ...questionData, answer: e.target.value })}
+      />
+
+      <label>Action to Run:</label>
+      <input
+        type="text"
+        value={questionData.actionToRun || ''}
+        onChange={(e) => setQuestionData({ ...questionData, actionToRun: e.target.value })}
+      />
+
+      <label>Variations:</label>
+      {questionData.variations?.map((variation, index) => (
+        <div key={index}>
+          <input
+            type="text"
+            value={variation.variationList || ''}
+            onChange={(e) =>
+              setQuestionData({
+                ...questionData,
+                variations: questionData.variations.map((v, i) =>
+                  i === index
+                    ? { ...v, variationList: e.target.value }
+                    : v
+                ),
+              })
+            }
+          />
+        </div>
+      ))}
+
+      <button onClick={handleUpdate}>Update</button>
+    </div>
+  );
+}
+
+export default EditPage;
+------------------
  const formData = {
         mainQuestion: questionData.mainQuestion,
         answer: questionData.answer,
