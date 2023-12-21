@@ -1,4 +1,47 @@
 roughcode
+
+// edit.js
+import React, { useState, useEffect } from 'react';
+import { getQuestions, updateQuestion } from '../api';
+
+function EditPage({ selectedOption, questionId }) {
+  const [questionData, setQuestionData] = useState({});
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const question = await getQuestions(selectedOption); // Assuming getQuestions returns an array of questions
+        const selectedQuestion = question.find(q => q.questionId === questionId);
+        setQuestionData(selectedQuestion);
+      } catch (error) {
+        console.error('Error fetching question for editing:', error);
+      }
+    };
+
+    fetchData();
+  }, [selectedOption, questionId]);
+
+  const handleUpdate = async () => {
+    try {
+      await updateQuestion(selectedOption, questionId, questionData);
+      // Add any additional logic or redirect to the admin page after successful update
+    } catch (error) {
+      console.error('Error updating question:', error);
+    }
+  };
+
+  // Your UI for editing questionData here
+
+  return (
+    <div>
+      {/* UI for editing questionData */}
+      <button onClick={handleUpdate}>Update</button>
+    </div>
+  );
+}
+
+export default EditPage;
++++++++++++++++++++++++++++++++++
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { getQuestion, updateQuestion } from "../api";
