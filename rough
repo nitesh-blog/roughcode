@@ -1,8 +1,9 @@
 roughcode
 import React, { useState } from 'react';
-import axios from 'axios';
 
-const UpdateForm = () => {
+import { updateQuestion } from '../api';
+
+const Edit = () => {
   const [questionData, setQuestionData] = useState({
     // Initialize with default values or fetch existing data
     // For example: title: '', description: '', etc.
@@ -23,7 +24,7 @@ const UpdateForm = () => {
     const questionId = 'your_question_id'; // Replace with the actual question ID
 
     try {
-      await updateQuestion(vendor, questionId, questionData);
+      await updateQuestion(vendor,questionData,questionId);
       console.log('Question updated successfully!');
     } catch (error) {
       console.error('Error updating question:', error);
@@ -51,7 +52,7 @@ const UpdateForm = () => {
   );
 };
 
-export default UpdateForm;
+export default Edit;
 
 +++++++++++++++++++++++
 import React, { useState } from 'react';
