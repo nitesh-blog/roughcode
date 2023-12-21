@@ -1,5 +1,15 @@
 roughcode
+ const formData = {
+        mainQuestion: questionData.mainQuestion,
+        answer: questionData.answer,
+        actionToRun: questionData.actionToRun,
+        variations: questionData.variations.map((variation) => ({
+          variationList: variation.variationList,
+          variationId: variation.variationId,
+        })),
 
+    }
+==========
 // edit.js
 import React, { useState, useEffect } from 'react';
 import { getQuestions, updateQuestion } from '../api';
