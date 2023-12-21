@@ -1,5 +1,60 @@
 roughcode
 import React, { useState } from 'react';
+import axios from 'axios';
+
+const UpdateForm = () => {
+  const [questionData, setQuestionData] = useState({
+    // Initialize with default values or fetch existing data
+    // For example: title: '', description: '', etc.
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setQuestionData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    const vendor = 'your_vendor'; // Replace with your vendor
+    const questionId = 'your_question_id'; // Replace with the actual question ID
+
+    try {
+      await updateQuestion(vendor, questionId, questionData);
+      console.log('Question updated successfully!');
+    } catch (error) {
+      console.error('Error updating question:', error);
+      // Handle error, show user feedback, etc.
+    }
+  };
+
+  return (
+    <form onSubmit={handleFormSubmit}>
+      {/* Add your input fields for question data */}
+      <label>
+        Title:
+        <input type="text" name="title" value={questionData.title || ''} onChange={handleInputChange} />
+      </label>
+
+      <label>
+        Description:
+        <textarea name="description" value={questionData.description || ''} onChange={handleInputChange} />
+      </label>
+
+      {/* Add more fields as needed */}
+      
+      <button type="submit">Update Question</button>
+    </form>
+  );
+};
+
+export default UpdateForm;
+
++++++++++++++++++++++++
+import React, { useState } from 'react';
 
 const initialFormData = {
   mainQuestion: '',
