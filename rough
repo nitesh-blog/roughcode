@@ -1,5 +1,25 @@
 roughcode
 
+<div className="d-flex justify-content-between">
+  <Pagination>
+    <Pagination.Prev onClick={handlePreviousPage} disabled={currentPage === 1}>Previous</Pagination.Prev>
+    {pageNumbers.map((number) => (
+      <Pagination.Item key={number} active={number === currentPage} onClick={() => setCurrentPage(number)}>
+        {number}
+      </Pagination.Item>
+    ))}
+    <Pagination.Next onClick={handleNextPage} disabled={currentPage === totalPages}>Next</Pagination.Next>
+  </Pagination>
+
+  <DropdownButton id="dropdown-basic-button" title={`Show ${itemsPerPage} Rows`}>
+    {[5, 10, 20].map((value) => (
+      <Dropdown.Item key={value} onClick={() => handleShowRowsChange(value)}>
+        {value}
+      </Dropdown.Item>
+    ))}
+  </DropdownButton>
+</div>
+----------
 import React, { useState, useEffect } from 'react';
 import { Table, Pagination, DropdownButton, Dropdown } from 'react-bootstrap';
 import { getPaginatedQuestions, getQuestions } from "../api";
