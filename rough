@@ -11,6 +11,7 @@ function AdminPage() {
   const [selectedOption, setSelectedOption] = useState('base'); // Default selection
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [totalPages, setTotalPages] = useState(1);
 
   const navigate = useNavigate();
 
@@ -19,6 +20,17 @@ function AdminPage() {
       const response = await getPaginatedQuestions(vendor, currentPage, itemsPerPage);
       setSelectedData(response.data);
       // setCurrentPage(1); // Check if this line is necessary
+      const paginationHeader = response.headers.get('x-pagination');
+      console.log(totalPages);
+      if(paginationHeader)
+      {
+        const paginationInfo = JSON.parse(paginationHeader);
+        setTotalPages(paginationInfo.TotalPages);
+      }
+      
+      else {
+        console.error("X-Pagination header not found in response");
+      }
     } catch (error) {
       console.log("Error:" + error);
     }
@@ -141,6 +153,7 @@ function AdminPage() {
 }
 
 export default AdminPage;
+
 _____________________
 import React, { useState, useEffect } from 'react';
 import { Table, Pagination, DropdownButton, Dropdown } from 'react-bootstrap';
