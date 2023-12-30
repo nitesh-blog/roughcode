@@ -1,5 +1,18 @@
 roughcode
+{
+  "ConnectionStrings": {
 
+    "DefaultConnection": "Data Source=np:\\\\.\\pipe\\LOCALDB#10C5858B\\tsql\\query;Initial Catalog=chatbot;Integrated Security=True"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}
+-----------------------------
 <div className="d-flex justify-content-between">
   <Pagination>
     <Pagination.Prev onClick={handlePreviousPage} disabled={currentPage === 1}>Previous</Pagination.Prev>
