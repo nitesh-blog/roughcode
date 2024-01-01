@@ -1,5 +1,45 @@
 roughcode
 
+Edit
+{/* Edit Modal */}
+    {showEditModal && (
+      <Modal show={showEditModal} onHide={handleCancelEdit}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Item</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{editModalContent}</Modal.Body>
+      </Modal>
+    )}
+------------------------------------
+const handleEdit = (index) => {
+  // Assume selectedData is an array of objects
+  const selectedItem = selectedData[index];
+  setEditingIndex(index);
+  setShowEditModal(true);
+  setEditModalContent(<EditPage selectedItem={selectedItem} onSave={handleSaveEdit} onCancel={handleCancelEdit} />);
+};
+
+const handleSaveEdit = (editedItem) => {
+  // Implement the logic to save the edited item to your data (e.g., API call)
+  // Update the state accordingly
+  const updatedData = [...selectedData];
+  updatedData[editingIndex] = editedItem;
+  setSelectedData(updatedData);
+
+  // Close the edit modal
+  setShowEditModal(false);
+  setEditingIndex(null);
+};
+
+const handleCancelEdit = () => {
+  // Close the edit modal
+  setShowEditModal(false);
+  setEditingIndex(null);
+};
+--------------------------------------
+
+--------------------------------------
+
 import React, { useState } from 'react';
 
 function EditPage({ selectedItem, onSave, onCancel }) {
