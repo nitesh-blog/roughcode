@@ -1,4 +1,72 @@
 roughcode
+
+import React, { useState } from 'react';
+
+function EditPage({ selectedItem, onSave, onCancel }) {
+  const [editedItem, setEditedItem] = useState({ ...selectedItem });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedItem((prevItem) => ({ ...prevItem, [name]: value }));
+  };
+
+  const handleSave = () => {
+    onSave(editedItem);
+  };
+
+  const handleCancel = () => {
+    onCancel();
+  };
+
+  return (
+    <div>
+      <h2>Edit Item</h2>
+      <form>
+        <div className="mb-3">
+          <label className="form-label">Question:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="question"
+            value={editedItem.question}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Answer:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="answer"
+            value={editedItem.answer}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Keywords:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="keyword"
+            value={editedItem.keyword.join(', ')}
+            onChange={handleInputChange}
+          />
+        </div>
+
+        <button type="button" className="btn btn-primary" onClick={handleSave}>
+          Save
+        </button>
+        <button type="button" className="btn btn-secondary ms-2" onClick={handleCancel}>
+          Cancel
+        </button>
+      </form>
+    </div>
+  );
+}
+
+export default EditPage;
+
+-----------------------------------------------------------------------
 {
   "ConnectionStrings": {
 
