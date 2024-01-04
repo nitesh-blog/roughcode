@@ -1,4 +1,21 @@
 roughcode
+------------------------------------------
+export const deleteQuestion = async (vendor, questionId) => {
+  try {
+    await axios.delete(`${API_BASE_URL}/api/admin/${vendor}/delete-question/${questionId}`);
+  } catch (error) {
+    console.error('Error deleting question:', error);
+    throw error;
+  }
+};
+
+ const handleDelete = (index) => {
+  
+  };
+ <button className="btn btn-danger ms-2" onClick={() => handleDelete()}>
+                  Delete
+                </button>
+-----------------------------------------
 APi
 export const importExcel = async(vendor) => {
   try {
