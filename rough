@@ -1,5 +1,195 @@
 roughcode
+import React, { useState } from 'react';
+import { addQuestion, importExcel } from '../api';
+import { Button } from 'react-bootstrap';
 
+const initialFormData = {
+  mainQuestion: '',
+  answer: '',
+  actionToRun: '',
+  variations: [
+    {
+      variationList: '',
+      variationId: 0,
+    },
+  ],
+};
+
+const AddData = () => {
+  const [formData, setFormData] = useState(initialFormData);
+  const [selectedOption,setSelectedOption] = useState('base');
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileUpload = async () => {
+    if(selectedFile)
+    {
+      try {
+        
+      const formData = new FormData();
+      formData.append('file',selectedFile)
+      const vendor = selectedOption;
+      const fileType  = selectedFile.type
+
+      await importExcel(vendor,formData,fileType);
+
+      console.log('File Upload:',selectedFile.type)
+      setSelectedFile(null)
+
+      } catch (error) {
+        console.log('Error File Uploading',error)
+      }
+
+      
+    }
+
+    else
+    {
+      console.log('No file selected.')
+    }
+  }
+  const handleSelectChange = (e) => {
+    setSelectedOption(e.target.value);
+  };
+
+  const handleInputChange = (e, index) => {
+    const { name, value } = e.target;
+    if (name === 'variationList') {
+      const updatedVariations = [...formData.variations];
+      updatedVariations[index][name] = value;
+      setFormData({
+        ...formData,
+        variations: updatedVariations,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
+  };
+
+  const handleSubmit =async (e) => {
+    e.preventDefault();
+    // Add your form submission logic here
+try {
+  await addQuestion(selectedOption,formData);
+  console.log("FormSubmitted",formData)
+} catch (error) {
+  console.log("Error:"+error)
+}
+
+    
+  };
+
+  const handleAddVariation = () => {
+    setFormData({
+      ...formData,
+      variations: [
+        ...formData.variations,
+        {
+          variationList: '',
+          variationId: formData.variations.length,
+        },
+      ],
+    });
+  };
+
+  const handleRemoveVariation = (index) => {
+    const updatedVariations = formData.variations.filter((_, i) => i !== index);
+    setFormData({
+      ...formData,
+      variations: updatedVariations,
+    });
+  };
+
+  const isFormValid = () => {
+    // Add your form validation logic here
+    return formData.mainQuestion !== '' && formData.answer !== '' && formData.actionToRun !== '';
+  };
+
+  return (
+    <div>
+        <br></br> <br></br> <br></br>
+      <div className='container card card-body shadow-lg p-3 mb-5 bg-white rounded' style={{backgroundColor:'white'}}>
+
+        <div className='d-flex'>
+        <span><h3>Create ChatBot DB</h3></span>
+        
+        <span style={{paddingLeft: '3rem'}} ><b>Select Vendor : </b></span>
+      <select className='btn btn-outline-dark' value={selectedOption} onChange={handleSelectChange}>
+        <option value="base">Base</option>
+        <option value="calco">Calico</option>
+        <option value="datatrace">DataTrace</option>
+        <option value="datatree">Data Tree</option>
+        <option value="lnd">LND</option>
+        {/* Add more options as needed */}
+      </select>
+      </div>
+
+    <form onSubmit={handleSubmit}>
+      <div className='form-group'>
+      <label>Main Question:</label>
+      <input type="text"  className='form-control' name="mainQuestion" value={formData.mainQuestion} onChange={handleInputChange} />
+    </div>
+    <br/>
+    <div className='form-group'>
+      <label>Answer:</label>
+      <input type="text" className='form-control'  name="answer" value={formData.answer} onChange={handleInputChange} />
+</div>
+<br/>
+      <div className='form-group'>
+      <label>Action to Run:</label>
+      <input type="text" className='form-control'  name="actionToRun" value={formData.actionToRun} onChange={handleInputChange} />
+</div>
+<br/>
+<div className='form-group'>
+      <label>Variations:</label>
+      {formData.variations.map((variation, index) => (
+        <div key={index}>
+          <br/>
+          <input
+            type="text"
+             className='form-control' 
+            name="variationList"
+            value={variation.variationList}
+            onChange={(e) => handleInputChange(e, index)}
+          />
+          <br/>
+          <button className='btn btn-primary' type="button" onClick={() => handleRemoveVariation(index)}>
+            Remove Variation
+          </button>
+        </div>
+      ))}
+       <br/>
+      <button type="button" className='btn btn-primary d-inline-flex' onClick={handleAddVariation}>
+        Add Variation
+      </button>
+      <br/><br/>
+      <button type="submit" className='btn btn-primary' disabled={!isFormValid()}>
+        Submit
+      </button>
+      </div>
+    </form>
+
+    </div>
+    
+  
+    <hr/>
+   <br/>
+    <div className='container card card-body shadow-lg p-3 mb-5 bg-white rounded' style={{backgroundColor:'white'}}>
+      <h3>Upload Your File</h3>
+      <br/>
+    <input type='file' className=' form-control' placeholder='Upload File only type of (txt,json,excel).'  onChange={ (e) => setSelectedFile(e.target.files[0])}/>
+    <small>Upload File only type of (txt,json,excel).</small><br/>
+    <Button style={{marginRight:'73rem'}} onClick={handleFileUpload}>Upload File</Button>
+  
+    </div>
+    </div>
+  );
+};
+
+export default AddData;
+------------------------------------------
 import React, { useState, useEffect } from 'react';
 import { getQuestions, updateQuestion } from '../api'; // Import your API functions
 import { useParams } from 'react-router-dom'; // Import useParams if using React Router
