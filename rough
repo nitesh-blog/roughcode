@@ -16,6 +16,153 @@ const EditPage = () => {
   useEffect(() => {
     const fetchQuestionData = async () => {
       try {
+        const questionData = await getQuestions(questionId, vendor);
+        setFormData({
+          mainQuestion: questionData.mainQuestion,
+          answer: questionData.answer,
+          actionToRun: questionData.actionToRun,
+          variations: questionData.variations.map((variation) => ({
+            variationList: variation.variationList,
+            variationId: variation.variationId,
+          })),
+        });
+      } catch (error) {
+        console.error('Error fetching question data:', error);
+      }
+    };
+
+    fetchQuestionData();
+  }, [vendor, questionId]);
+
+  const handleInputChange = (e, index) => {
+    const { name, value } = e.target;
+    if (name === 'variations') {
+      const updatedVariations = [...formData.variations];
+      updatedVariations[index] = { ...updatedVariations[index], variationList: value };
+      setFormData({ ...formData, variations: updatedVariations });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await updateQuestion(vendor, questionId, formData);
+      console.log('Question updated successfully!');
+      // You may want to add some feedback to the user, redirect, or perform other actions upon successful update.
+    } catch (error) {
+      console.error('Error updating question:', error);
+      // Handle error - show an error message to the user or log it.
+    }
+  };
+
+  const handleAddVariation = () => {
+    setFormData({
+      ...formData,
+      variations: [
+        ...formData.variations,
+        {
+          variationList: '',
+          variationId: formData.variations.length,
+        },
+      ],
+    });
+  };
+
+  const handleRemoveVariation = (index) => {
+    const updatedVariations = formData.variations.filter((_, i) => i !== index);
+    setFormData({
+      ...formData,
+      variations: updatedVariations,
+    });
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleFormSubmit}>
+        <div className='form-group'>
+          <label>Main Question:</label>
+          <input
+            className='form-control'
+            type="text"
+            name="mainQuestion"
+            value={formData.mainQuestion}
+            onChange={handleInputChange}
+          />
+        </div>
+        <br />
+        <div className='form-group'>
+          <label>Answer:</label>
+          <input
+            className='form-control'
+            type="text"
+            name="answer"
+            value={formData.answer}
+            onChange={handleInputChange}
+          />
+        </div>
+        <br />
+        <div className='form-group'>
+          <label>ActionToRun:</label>
+          <input
+            className='form-control'
+            type="text"
+            name="actionToRun"
+            value={formData.actionToRun}
+            onChange={handleInputChange}
+          />
+        </div>
+        <br />
+        <div className='form-group'>
+          <label>Variations:</label>
+          {formData.variations.map((variation, index) => (
+            <div key={index}>
+              <textarea
+                className='form-control'
+                name="variations"
+                value={variation.variationList}
+                onChange={(e) => handleInputChange(e, index)}
+              />
+              <br />
+              <button className='btn btn-primary' type="button" onClick={() => handleRemoveVariation(index)}>
+                Remove Variation
+              </button>
+            </div>
+          ))}
+          <br />
+          <button type="button" className='btn btn-primary d-inline-flex' onClick={handleAddVariation}>
+            Add Variation
+          </button>
+        </div>
+        <br />
+        <button className='btn btn-success' type="submit">
+          Update
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default EditPage;
+----------------
+import React, { useState, useEffect } from 'react';
+import { getQuestions, updateQuestion } from '../api'; // Import your API functions
+import { useParams } from 'react-router-dom'; // Import useParams if using React Router
+
+const EditPage = () => {
+  const { vendor, questionId } = useParams(); // Use useParams to get parameters from the URL
+  const [formData, setFormData] = useState({
+    mainQuestion: '',
+    answer: '',
+    actionToRun: '',
+    variations: [],
+  });
+
+  useEffect(() => {
+    const fetchQuestionData = async () => {
+      try {
         console.log("data: ", vendor, questionId);
         const questionData = await getQuestions(questionId, vendor);
         console.log('question data: ', questionData);
