@@ -1,5 +1,297 @@
 roughcode
 
+import React, { useState, useEffect } from 'react';
+import { Table, Pagination, DropdownButton, Dropdown } from 'react-bootstrap';
+import { deleteQuestion, getPaginatedQuestions, getQuestions, getQuestionsAll } from "../api";
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
+
+function AdminPage() {
+  var [selectedData, setSelectedData] = useState([]);
+  const [selectedOption, setSelectedOption] = useState('base'); // Default selection
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [totalPages, setTotalPages] = useState(2);
+
+  const navigate = useNavigate();
+  
+  const fetchData = async (vendor,currentPage,itemsPerPage) => {
+    try {
+      const response = await getPaginatedQuestions(vendor, currentPage, itemsPerPage);
+      console.log("this is response",response);
+      setSelectedData(response.data);
+
+      const paginationHeader = response.headers.get('x-pagination');
+      
+      if (paginationHeader) {
+        const paginationInfo = JSON.parse(paginationHeader);
+        setTotalPages(paginationInfo.TotalPages);
+      } else {
+        console.error("X-Pagination header not found in response");
+      }
+    } catch (error) {
+      console.log("Error:" + error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(selectedOption,currentPage,itemsPerPage);
+  }, [selectedOption, currentPage, itemsPerPage]);
+
+  const handleSelectChange = (e) => {
+    setSelectedOption(e.target.value);
+  };
+
+  const handleEdit = (vendor,questionId) => {
+    navigate(`/edit/${vendor}/${questionId}`)
+  };
+
+  const handleDelete = async (vendor,questionId) => {
+
+  try {
+    await deleteQuestion(vendor,questionId);
+
+    console.log("question deleted successfully!")
+    
+  } catch (error) {
+    console.log("error:---",error)
+  }
+  toast.success('Data Deleted Successfully!',{
+    position:"top-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable:true,
+   
+  });
+  const selectedData1 =await getQuestionsAll(selectedOption)
+  
+
+  let list= selectedData1.slice((item) => (item.questionAnswersId===questionId))
+  setSelectedData(list)
+  };
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    // setCurrentPage((prevPage) => Math.min(prevPage + 1, Math.ceil(selectedData.length / itemsPerPage)));
+    setCurrentPage((prevPage) => Math.min(prevPage + 1));
+  };
+
+  const handleShowRowsChange = (value) => {
+    setItemsPerPage(value);
+    setCurrentPage(1); // Reset to the first page when changing the number of items per page
+  };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = selectedData.slice(indexOfFirstItem, indexOfLastItem);
+
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(totalPages); i++) {
+    pageNumbers.push(i);
+  }
+console.log(pageNumbers)
+  return (
+    <>
+    <br/><br/>
+    <div className='container card card-body shadow-lg p-3 mb-5 bg-white rounded'>
+      <h3>View/Update ChatBot DB</h3>
+      <br />
+      <div className='d-inline-flex'>
+      <span>Select Vendor : </span>
+      <select className='btn btn-outline-dark '  style={{marginRight:'50rem'}} value={selectedOption} onChange={handleSelectChange}>
+        <option value="base">Base</option>
+        <option value="calco">Calico</option>
+        <option value="datatrace">DataTrace</option>
+        <option value="datatree">Data Tree</option>
+        <option value="lnd">LND</option>
+        {/* Add more options as needed */}
+      </select>
+      </div>
+      <br />
+      <div>Total Pages: {totalPages}</div>
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>Index</th>
+            <th>Question</th>
+            <th>Answer</th>
+            <th>Action To Run</th>
+            <th>Variation</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+{  selectedOption === 'base' &&
+        <tbody>
+          {selectedData.map((item) => (
+            <tr key={item.questionAnswersId}>
+              <td>{item.questionAnswersId}</td>
+              <td>{item.mainQuestion}</td>
+              <td>{item.answer}</td>
+              <td>{item.actionToRun}</td>
+              <td>
+                {item.variations?.map((variation,) => (
+                  <div key={variation.variationId}> {variation.variationList}</div>
+                ))}
+              </td>
+              <td>
+                <button className="btn btn-primary" onClick={() => handleEdit(selectedOption,item.questionAnswersId)} >
+                  Edit
+                </button>
+              </td>
+              <td>
+                <button className="btn btn-danger ms-2" onClick={() => handleDelete(selectedOption,item.questionAnswersId)}>
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+}
+{  selectedOption === 'calco' &&
+        <tbody>
+          {selectedData.map((item) => (
+            <tr key={item.calcoQuestionAnswersId}>
+              <td>{item.calcoQuestionAnswersId}</td>
+              <td>{item.mainQuestion}</td>
+              <td>{item.answer}</td>
+              <td>{item.actionToRun}</td>
+              <td>
+                {item.variations?.map((variation,) => (
+                  <div key={variation.variationId}> {variation.variationList}</div>
+                ))}
+              </td>
+              <td>
+                <button className="btn btn-primary" onClick={() => handleEdit(selectedOption,item.calcoQuestionAnswersId)} >
+                  Edit
+                </button>
+              </td>
+              <td>
+                <button className="btn btn-danger ms-2" onClick={() => handleDelete(selectedOption,item.calcoQuestionAnswersId)}>
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+}
+{  selectedOption === 'datatree' &&
+        <tbody>
+          {selectedData.map((item) => (
+            <tr key={item.datatreeQuestionAnswersId}>
+              <td>{item.datatreeQuestionAnswersId}</td>
+              <td>{item.mainQuestion}</td>
+              <td>{item.answer}</td>
+              <td>{item.actionToRun}</td>
+              <td>
+                {item.variations?.map((variation,) => (
+                  <div key={variation.variationId}> {variation.variationList}</div>
+                ))}
+              </td>
+              <td>
+                <button className="btn btn-primary" onClick={() => handleEdit(selectedOption,item.datatreeQuestionAnswersId)} >
+                  Edit
+                </button>
+              </td>
+              <td>
+                <button className="btn btn-danger ms-2" onClick={() => handleDelete(selectedOption,item.datatreeQuestionAnswersId)}>
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+}
+{  selectedOption === 'datatrace' &&
+        <tbody>
+          {selectedData.map((item) => (
+            <tr key={item.datatraceQuestionAnswersId}>
+              <td>{item.datatraceQuestionAnswersId}</td>
+              <td>{item.mainQuestion}</td>
+              <td>{item.answer}</td>
+              <td>{item.actionToRun}</td>
+              <td>
+                {item.variations?.map((variation,) => (
+                  <div key={variation.variationId}> {variation.variationList}</div>
+                ))}
+              </td>
+              <td>
+                <button className="btn btn-primary" onClick={() => handleEdit(selectedOption,item.datatraceQuestionAnswersId)} >
+                  Edit
+                </button>
+              </td>
+              <td>
+                <button className="btn btn-danger ms-2" onClick={() => handleDelete(selectedOption,item.datatraceQuestionAnswersId)}>
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+}
+{  selectedOption === 'lnd' &&
+        <tbody>
+          {selectedData.map((item) => (
+            <tr key={item.lndQuestionAnswersId}>
+              <td>{item.lndQuestionAnswersId}</td>
+              <td>{item.mainQuestion}</td>
+              <td>{item.answer}</td>
+              <td>{item.actionToRun}</td>
+              <td>
+                {item.variations?.map((variation,) => (
+                  <div key={variation.variationId}> {variation.variationList}</div>
+                ))}
+              </td>
+              <td>
+                <button className="btn btn-primary" onClick={() => handleEdit(selectedOption,item.lndQuestionAnswersId)} >
+                  Edit
+                </button>
+              </td>
+              <td>
+                <button className="btn btn-danger ms-2" onClick={() => handleDelete(selectedOption,item.lndQuestionAnswersId)}>
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+}
+      </Table>
+
+      <div className="d-flex justify-content-between">
+  <Pagination>
+    <Pagination.Prev onClick={handlePreviousPage} disabled={currentPage === 1}>Previous</Pagination.Prev>
+    {pageNumbers.map((number) => (
+      <Pagination.Item key={number} active={number === currentPage} onClick={() => setCurrentPage(number)}>
+        {number}
+      </Pagination.Item>
+    ))}
+    <Pagination.Next onClick={handleNextPage} disabled={currentPage === totalPages}>Next</Pagination.Next>
+  </Pagination>
+
+  <DropdownButton id="dropdown-basic-button" title={`Show ${itemsPerPage} Rows`}>
+    {[5, 10, 20].map((value) => (
+      <Dropdown.Item key={value} onClick={() => handleShowRowsChange(value)}>
+        {value}
+      </Dropdown.Item>
+    ))}
+  </DropdownButton>
+</div>
+    </div>
+    </>
+  );
+}
+
+export default AdminPage;
+-------------------------------------------
+
 export const getQuestions = async (vendor,questionAnswersId) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/api/admin/${vendor}/questions/${questionAnswersId}`);
