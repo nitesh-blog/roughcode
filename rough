@@ -1,4 +1,16 @@
 roughcode
+
+export const getQuestions = async (vendor,questionAnswersId) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/admin/${vendor}/questions/${questionAnswersId}`);
+    console.log("data from backend",response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching questions:', error);
+    throw error;
+  }
+};
+--------------------------------------------------------
 import React, { useState } from 'react';
 import { addQuestion, importExcel } from '../api';
 import { Button } from 'react-bootstrap';
