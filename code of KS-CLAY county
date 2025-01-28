@@ -1,1 +1,725 @@
+ini:
+YEAR=2025
+COUNTYNAME=KS-CLAY
+HOST=https://ks278.cichosting.com
+WEBSITE=https://ks278.cichosting.com/ttp/tax/Search/search_tax.aspx
+CONNECTION_TIMEOUT=180000
+#HTTP,SELINIUM
+SCRAPER=HTTP
+#FULL(only screenshot),STATIC(both screenshot and xml)
+SCRAPER_TYPE=STATIC
+SEARCH_TYPE=BOTH
 
+
+program:
+
+package com.scraper.county.KS_CLAY;
+
+import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.TreeMap;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.http.message.BasicNameValuePair;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
+import com.scraper.county.Scraper;
+import com.scraper.county.model.SAValuesInd;
+import com.scraper.county.model.SpecialAssessmentsWrapper;
+import com.scraper.county.model.TaxDetails;
+import com.scraper.county.model.TaxInstallment;
+import com.scraper.utils.DynamicXMLFields;
+import com.scraper.utils.HttpWrapper;
+import com.scraper.utils.ScraperConsts;
+import com.scraper.utils.ScraperStripper;
+import com.scraper.utils.ScraperUtils;
+
+public class cDataAcquisition extends Scraper {
+	List<TaxInstallment> taxInstallmentsList = new ArrayList<TaxInstallment>();
+	List<BasicNameValuePair> headers = new ArrayList<BasicNameValuePair>();
+	List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
+	List<SAValuesInd> saValuesList = new ArrayList<>();
+	double redemptionAmt = 0.0;
+	String currentyearurl = null;
+	String prioryearurl = null;
+	String taxRate = null;
+	String cookie = "";
+
+	public void scrapeData() {
+		String url = "";
+		String responseBody = "";
+		
+		try {
+			requestConf.debug("Starting time :" + new Timestamp(new java.util.Date().getTime()).toString());
+			String userAPN = requestConf.getPropertyId().replace(".", "-");
+			url = requestConf.scraperConfig.get(ScraperConsts.WEBSITE);
+			headers.add(new BasicNameValuePair("User-Agent",
+					"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"));
+			headers.add(new BasicNameValuePair("Upgrade-Insecure-Requests","1"));
+			try {
+				responseBody = httpWrapper.executeMethod(HttpWrapper.GET, url, headers, null, null);
+				requestConf.debug("First ResponseBody ==>" + responseBody);
+			} catch (Exception e) {
+				requestConf.error("Exception in url" + url + " for " + requestConf.getPropertyId() + "with Exception "
+						+ ExceptionUtils.getFullStackTrace(e));
+				returnError(1);
+				requestConf.setExceptionType(e);
+				return;
+			}
+			List<String> cookies = httpWrapper.getHeaders("Set-Cookie");
+			cookie = cookies.get(0).replace(" path=/; HttpOnly; SameSite=Lax","").trim();
+			cookie = cookie + " txtTaxLogin=true; txtModule=TAX; SecurityLevel=3";
+			requestConf.debug("cookie"+cookie);
+			
+			headers.add(new BasicNameValuePair("Host", "ks278.cichosting.com"));
+			headers.add(new BasicNameValuePair("Origin", "https://ks278.cichosting.com"));
+			headers.add(new BasicNameValuePair("Referer", url));
+			headers.add(new BasicNameValuePair("Cookie", cookie));
+			
+			params.add(new BasicNameValuePair("__EVENTTARGET", ""));
+			params.add(new BasicNameValuePair("__EVENTARGUMENT", ""));
+			params.add(new BasicNameValuePair("__VIEWSTATE", ScraperUtils.getHiddnenField("__VIEWSTATE", responseBody)));
+			params.add(new BasicNameValuePair("__VIEWSTATEGENERATOR",ScraperUtils.getHiddnenField("__VIEWSTATEGENERATOR", responseBody)));
+			params.add(new BasicNameValuePair("__EVENTVALIDATION",ScraperUtils.getHiddnenField("__EVENTVALIDATION", responseBody)));
+			params.add(new BasicNameValuePair("chkRealEstate", "on"));
+			params.add(new BasicNameValuePair("txtOwnerTPayerId", ""));
+			params.add(new BasicNameValuePair("txtTaxInformation1", ""));
+			params.add(new BasicNameValuePair("txtTaxInformation2", ""));
+			params.add(new BasicNameValuePair("txtName", ""));
+			params.add(new BasicNameValuePair("rbtType", "rbtBoth"));
+			params.add(new BasicNameValuePair("txtStreetNumber", ""));
+			params.add(new BasicNameValuePair("txtStreetName", ""));
+			params.add(new BasicNameValuePair("ddlSubdivision", ""));
+			params.add(new BasicNameValuePair("txtBlock", ""));
+			params.add(new BasicNameValuePair("txtLot", ""));
+			params.add(new BasicNameValuePair("txtSection", ""));
+			params.add(new BasicNameValuePair("txtTownship", ""));
+			params.add(new BasicNameValuePair("txtRange", ""));
+			params.add(new BasicNameValuePair("txtLeaseName", ""));
+			params.add(new BasicNameValuePair("btnFindNow.x", "25"));
+			params.add(new BasicNameValuePair("btnFindNow.y", "12"));
+			if (userAPN != null && StringUtils.isNotEmpty(userAPN)) {
+				String[] apnsplit = userAPN.split("-");
+				if(apnsplit.length>6) {
+				params.add(new BasicNameValuePair("txtMAP", apnsplit[0]));
+				params.add(new BasicNameValuePair("txtSEC", apnsplit[1]));
+				params.add(new BasicNameValuePair("txtSHT", apnsplit[2]));
+				params.add(new BasicNameValuePair("txtQTR", apnsplit[3]));
+				params.add(new BasicNameValuePair("txtBLK", apnsplit[4]));
+				params.add(new BasicNameValuePair("txtPRE", apnsplit[5]));
+				params.add(new BasicNameValuePair("txtSUF", apnsplit[6]));
+				params.add(new BasicNameValuePair("txtOWN", apnsplit[7]));
+				}else {
+					requestConf.debug("Invalid APN Format");
+					returnError(13);
+					return;
+				}
+			}
+			try {
+				responseBody = httpWrapper.executeMethod(HttpWrapper.POST, url, headers, params, null);
+				requestConf.debug("Second responseBody ==>" + responseBody);
+			} catch (Exception e) {
+				requestConf.error("Exception in url" + url + " for " + requestConf.getPropertyId() + "with Exception "
+						+ ExceptionUtils.getFullStackTrace(e));
+				returnError(1);
+				requestConf.setExceptionType(e);
+				return;
+			}
+			if(httpWrapper.statuscode == 302) {
+			String location = httpWrapper.getHeader("Location");
+			requestConf.debug("location"+location);
+			if(StringUtils.isNotEmpty(location)) {
+				url = requestConf.scraperConfig.get(ScraperConsts.HOST) +  location;
+				requestConf.debug("Url"+url);
+			}
+			headers.clear();
+			headers.add(new BasicNameValuePair("User-Agent",
+					"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"));
+			headers.add(new BasicNameValuePair("Upgrade-Insecure-Requests","1"));
+			try {
+				responseBody = httpWrapper.executeMethod(HttpWrapper.GET, url, headers, null, null);
+				requestConf.debug("Redirected Result responseBody ==>" + responseBody);
+			} catch (Exception e) {
+				requestConf.error("Exception in url" + url + " for " + requestConf.getPropertyId() + "with Exception "
+						+ ExceptionUtils.getFullStackTrace(e));
+				returnError(1);
+				requestConf.setExceptionType(e);
+				return;
+			}
+			}else {
+				requestConf.debug("NO RECORDS FOUND");
+				returnError(11);
+				return;
+			}
+			Document document = Jsoup.parse(responseBody);
+			Elements trdata = document.select("table[id=tblResult]").select("a[class=links]");
+			if (trdata != null) {
+				requestConf.debug("no of results: \t" + trdata.size());
+				if (trdata.size() > 2) {
+					requestConf.debug("MULTIPLE MATCHES FOUND");
+					returnError(11);
+					return;
+				} else {
+					requestConf.debug("SINGLE RECORD FOUND");
+					String priorresponseBody  = null;
+					if (StringUtils.isNotBlank(responseBody)
+							&& StringUtils.containsIgnoreCase(responseBody, "Search Tax Information Results")) {
+						if(trdata.size()==2) {
+						currentyearurl = "https://ks278.cichosting.com/ttp/tax/Search/"+trdata.get(0).attr("href");
+						prioryearurl = "https://ks278.cichosting.com/ttp/tax/Search/"+trdata.get(1).attr("href");
+						requestConf.debug("currentyearurl"+currentyearurl);
+						requestConf.debug("prioryearurl"+prioryearurl);
+						headers.clear();
+						headers.add(new BasicNameValuePair("User-Agent",
+								"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"));
+						headers.add(new BasicNameValuePair("Upgrade-Insecure-Requests","1"));
+						headers.add(new BasicNameValuePair("Host", "ks278.cichosting.com"));
+						headers.add(new BasicNameValuePair("Referer", "https://ks278.cichosting.com/ttp/tax/Search/search_tax_results.aspx"));
+						try {
+							responseBody = httpWrapper.executeMethod(HttpWrapper.GET, currentyearurl, headers, null, null);
+							requestConf.debug("Current Year responseBody ==>" + responseBody);
+						} catch (Exception e) {
+							requestConf.error("Exception in url" + url + " for " + requestConf.getPropertyId() + "with Exception "
+									+ ExceptionUtils.getFullStackTrace(e));
+							returnError(1);
+							requestConf.setExceptionType(e);
+							return;
+						}
+						if(responseBody.contains("No Current Tax Year Records Exist for this Selection.")) {
+							returnError(14);
+							return;
+						}
+						try {
+							priorresponseBody = httpWrapper.executeMethod(HttpWrapper.GET, prioryearurl, headers, null, null);
+							requestConf.debug("Prior Year responseBody ==>" + priorresponseBody);
+						} catch (Exception e) {
+							requestConf.error("Exception in url" + url + " for " + requestConf.getPropertyId() + "with Exception "
+									+ ExceptionUtils.getFullStackTrace(e));
+							returnError(1);
+							requestConf.setExceptionType(e);
+							return;
+						}
+						extractXMLFields(responseBody , priorresponseBody);
+						}}
+					else {
+						returnError(2);
+						return;
+					}
+				}
+			}
+		} catch (Exception e) {
+			requestConf.debug("Global Exception" + e + " for parcel: " + requestConf.getPropertyId());
+			requestConf.setErrorCode(2);
+			requestConf.setExceptionType(e);
+		} finally {
+			requestConf.debug("Ending Time of KS CLAY county Scraping :" + new Timestamp(System.currentTimeMillis()));
+		}
+	}
+	
+	public void scrapeAddressData() {
+		errorCode = -1;
+		requestConf.setErrorCode(errorCode);
+		String streetName = requestConf.getStreetName().trim();
+		String streetNumber = requestConf.getStreetNumber().trim();
+		String url = "";
+		String responseBody = "";
+		headers.clear();
+		params.clear();
+		try {
+			requestConf.debug("Starting time :" + new Timestamp(new java.util.Date().getTime()).toString());
+			url = requestConf.scraperConfig.get(ScraperConsts.WEBSITE);
+			headers.add(new BasicNameValuePair("User-Agent",
+					"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"));
+			headers.add(new BasicNameValuePair("Upgrade-Insecure-Requests","1"));
+			try {
+				responseBody = httpWrapper.executeMethod(HttpWrapper.GET, url, headers, null, null);
+				requestConf.debug("First ResponseBody ==>" + responseBody);
+			} catch (Exception e) {
+				requestConf.error("Exception in url" + url + " for " + requestConf.getPropertyId() + "with Exception "
+						+ ExceptionUtils.getFullStackTrace(e));
+				returnError(1);
+				requestConf.setExceptionType(e);
+				return;
+			}
+
+			headers.add(new BasicNameValuePair("Host", "ks278.cichosting.com"));
+			headers.add(new BasicNameValuePair("Origin", "https://ks278.cichosting.com"));
+			headers.add(new BasicNameValuePair("Referer", url));
+			headers.add(new BasicNameValuePair("Cookie", cookie));
+			
+			params.add(new BasicNameValuePair("__EVENTTARGET", ""));
+			params.add(new BasicNameValuePair("__EVENTARGUMENT", ""));
+			params.add(new BasicNameValuePair("__VIEWSTATE", ScraperUtils.getHiddnenField("__VIEWSTATE", responseBody)));
+			params.add(new BasicNameValuePair("__VIEWSTATEGENERATOR",ScraperUtils.getHiddnenField("__VIEWSTATEGENERATOR", responseBody)));
+			params.add(new BasicNameValuePair("__EVENTVALIDATION",ScraperUtils.getHiddnenField("__EVENTVALIDATION", responseBody)));
+			params.add(new BasicNameValuePair("chkRealEstate", "on"));
+			params.add(new BasicNameValuePair("txtOwnerTPayerId", ""));
+			params.add(new BasicNameValuePair("txtTaxInformation1", ""));
+			params.add(new BasicNameValuePair("txtTaxInformation2", ""));
+			params.add(new BasicNameValuePair("txtName", ""));
+			params.add(new BasicNameValuePair("rbtType", "rbtBoth"));
+			params.add(new BasicNameValuePair("txtStreetNumber", streetNumber));
+			params.add(new BasicNameValuePair("txtStreetName", streetName));
+			params.add(new BasicNameValuePair("ddlSubdivision", ""));
+			params.add(new BasicNameValuePair("txtBlock", ""));
+			params.add(new BasicNameValuePair("txtLot", ""));
+			params.add(new BasicNameValuePair("txtSection", ""));
+			params.add(new BasicNameValuePair("txtTownship", ""));
+			params.add(new BasicNameValuePair("txtRange", ""));
+			params.add(new BasicNameValuePair("txtLeaseName", ""));
+			params.add(new BasicNameValuePair("btnFindNow.x", "46"));
+			params.add(new BasicNameValuePair("btnFindNow.y", "5"));
+			params.add(new BasicNameValuePair("txtMAP", ""));
+			params.add(new BasicNameValuePair("txtSEC", ""));
+			params.add(new BasicNameValuePair("txtSHT", ""));
+			params.add(new BasicNameValuePair("txtQTR", ""));
+			params.add(new BasicNameValuePair("txtBLK", ""));
+			params.add(new BasicNameValuePair("txtPRE", ""));
+			params.add(new BasicNameValuePair("txtSUF", ""));
+			params.add(new BasicNameValuePair("txtOWN", ""));
+			try {
+				responseBody = httpWrapper.executeMethod(HttpWrapper.POST, url, headers, params, null);
+				requestConf.debug("Second responseBody ==>" + responseBody);
+			} catch (Exception e) {
+				requestConf.error("Exception in url" + url + " for " + requestConf.getPropertyId() + "with Exception "
+						+ ExceptionUtils.getFullStackTrace(e));
+				returnError(1);
+				requestConf.setExceptionType(e);
+				return;
+			}
+			if(httpWrapper.statuscode == 302) {
+			String location = httpWrapper.getHeader("Location");
+			requestConf.debug("location"+location);
+			if(StringUtils.isNotEmpty(location)) {
+				url = requestConf.scraperConfig.get(ScraperConsts.HOST) +  location;
+				requestConf.debug("Url"+url);
+			}
+			headers.clear();
+			headers.add(new BasicNameValuePair("User-Agent",
+					"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"));
+			headers.add(new BasicNameValuePair("Upgrade-Insecure-Requests","1"));
+			try {
+				responseBody = httpWrapper.executeMethod(HttpWrapper.GET, url, headers, null, null);
+				requestConf.debug("Redirected Result responseBody ==>" + responseBody);
+			} catch (Exception e) {
+				requestConf.error("Exception in url" + url + " for " + requestConf.getPropertyId() + "with Exception "
+						+ ExceptionUtils.getFullStackTrace(e));
+				returnError(1);
+				requestConf.setExceptionType(e);
+				return;
+			}
+			}else {
+				requestConf.debug("NO RECORDS FOUND");
+				returnError(11);
+				return;
+			}
+			Document document = Jsoup.parse(responseBody);
+			Elements trdata = document.select("table[id=tblResult]").select("a[class=links]");
+			if (trdata != null) {
+				requestConf.debug("no of results: \t" + trdata.size());
+				if (trdata.size() > 2) {
+					requestConf.debug("MULTIPLE MATCHES FOUND");
+					returnError(11);
+					return;
+				} else {
+					requestConf.debug("SINGLE RECORD FOUND");
+					String priorresponseBody  = null;
+					if (StringUtils.isNotBlank(responseBody)
+							&& StringUtils.containsIgnoreCase(responseBody, "Search Tax Information Results")) {
+						if(trdata.size()==2) {
+						currentyearurl = "https://ks278.cichosting.com/ttp/tax/Search/"+trdata.get(0).attr("href");
+						prioryearurl = "https://ks278.cichosting.com/ttp/tax/Search/"+trdata.get(1).attr("href");
+						requestConf.debug("currentyearurl"+currentyearurl);
+						requestConf.debug("prioryearurl"+prioryearurl);
+						headers.clear();
+						headers.add(new BasicNameValuePair("User-Agent",
+								"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"));
+						headers.add(new BasicNameValuePair("Upgrade-Insecure-Requests","1"));
+						headers.add(new BasicNameValuePair("Host", "ks278.cichosting.com"));
+						headers.add(new BasicNameValuePair("Referer", "https://ks278.cichosting.com/ttp/tax/Search/search_tax_results.aspx"));
+						try {
+							responseBody = httpWrapper.executeMethod(HttpWrapper.GET, currentyearurl, headers, null, null);
+							requestConf.debug("Current Year responseBody ==>" + responseBody);
+						} catch (Exception e) {
+							requestConf.error("Exception in url" + url + " for " + requestConf.getPropertyId() + "with Exception "
+									+ ExceptionUtils.getFullStackTrace(e));
+							returnError(1);
+							requestConf.setExceptionType(e);
+							return;
+						}
+						if(responseBody.contains("No Current Tax Year Records Exist for this Selection.")) {
+							returnError(14);
+							return;
+						}
+						try {
+							priorresponseBody = httpWrapper.executeMethod(HttpWrapper.GET, prioryearurl, headers, null, null);
+							requestConf.debug("Prior Year responseBody ==>" + priorresponseBody);
+						} catch (Exception e) {
+							requestConf.error("Exception in url" + url + " for " + requestConf.getPropertyId() + "with Exception "
+									+ ExceptionUtils.getFullStackTrace(e));
+							returnError(1);
+							requestConf.setExceptionType(e);
+							return;
+						}
+						extractXMLFields(responseBody , priorresponseBody);
+						}}
+					else {
+						returnError(2);
+						return;
+					}
+				}
+			}
+		} catch (Exception e) {
+			requestConf.debug("Global Exception" + e + " for parcel: " + requestConf.getPropertyId());
+			requestConf.setErrorCode(2);
+			requestConf.setExceptionType(e);
+		} finally {
+			requestConf.debug("Ending Time of KS CLAY county Scraping :" + new Timestamp(System.currentTimeMillis()));
+		}
+	}
+
+	private void extractXMLFields(String responseBody, String priorYearResponseBody) {
+		requestConf.debug("Entered ExtractXMLFields() " + responseBody);
+		String curadresponseBody = null;
+		try {
+			Document document = Jsoup.parse(responseBody);
+			Elements trdata = document.select("table[cellspacing='1'][style='border-width:0px;width:100%;']");
+			Elements headerinfo = trdata.get(0).select("tbody").get(0).select("tr");
+			String stippedheaderdata = ScraperStripper.stripTags(headerinfo.html());
+			tax_APN = ScraperUtils.findValue(stippedheaderdata, "CAMA NUMBER",3);
+			taxName = ScraperUtils.findValue(stippedheaderdata, "TAXPAYER ID",-1);
+			situsAddress = ScraperUtils.findValue(stippedheaderdata, "SITUS ADDRESS:",0);
+			situsAddress = situsAddress.replace("SITUS ADDRESS:", "").trim();
+			
+			Elements briefdata = document.select("table[cellspacing='0'][style='border-width:0px;width:100%;border-collapse:collapse;']").get(2).
+					select("tbody").get(0).select("tr").get(0).select("td");
+			if(briefdata.size()>6) {
+			for(int i=0; i < briefdata.size();i++) {
+				String data = briefdata.get(i).text().trim().replace("&nbsp;","");
+				if(StringUtils.isNotEmpty(data)) {
+					briefLegalDescription = briefLegalDescription + data + " ";
+				}else {
+					briefLegalDescription = briefLegalDescription + " ";
+				}
+			}
+			briefLegalDescription = briefLegalDescription.replace("null","");
+			}
+			if(stippedheaderdata.contains("TRACT 1")) {
+				String tract = ScraperUtils.findValue(stippedheaderdata, "TRACT 1",1);
+				if(!tract.contains("TAX HISTORY") && StringUtils.isNotEmpty(briefLegalDescription)) {
+					briefLegalDescription = briefLegalDescription+ " TRACT 1 "+ tract;
+				}
+			}
+			
+			String currentaddtionalurl = "https://ks278.cichosting.com/ttp/tax/Search/"+document.select("table[cellspacing='0'][style='border-width:0px;width:100%;border-collapse:collapse;']").get(3).
+					select("a[class=links]").attr("href");
+			requestConf.debug("Current Additional Data Url"+currentaddtionalurl);
+			headers.clear();
+			headers.add(new BasicNameValuePair("User-Agent",
+					"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"));
+			headers.add(new BasicNameValuePair("Upgrade-Insecure-Requests","1"));
+			headers.add(new BasicNameValuePair("Host", "ks278.cichosting.com"));
+			headers.add(new BasicNameValuePair("Referer", currentyearurl));
+			try {
+				curadresponseBody = httpWrapper.executeMethod(HttpWrapper.GET, currentaddtionalurl, headers, null, null);
+				requestConf.debug("Current Year responseBody ==>" + curadresponseBody);
+			} catch (Exception e) {
+				requestConf.error("Exception in url" + currentyearurl + " for " + requestConf.getPropertyId() + "with Exception "
+						+ ExceptionUtils.getFullStackTrace(e));
+				returnError(1);
+				requestConf.setExceptionType(e);
+				return;
+			}
+			getTaxInstallmentDetails(responseBody, curadresponseBody);
+			if(!(taxInstallmentsList.size() == 1)) {
+				returnError(1);
+				return;
+			}else {
+				getPriorYearTaxInstallments(priorYearResponseBody);
+			}
+			taxDetails = TaxDetails.getTaxDetailsObject(taxInstallmentsList);
+			specialAssessments = SpecialAssessmentsWrapper.getSpecialAssessmentsObject(saValuesList);
+			DynamicXMLFields dynamicXMLFields = DynamicXMLFields.getdynamicXMLFieldsObject(traName, taxName, tax_APN,
+					traCode, useCode, taxYear, situsAddress, mailingAddress, briefLegalDescription, docNum, bookNum,
+					pageNum, errorCode, taxDetails, specialAssessments, null, null, null);
+			dynamicXMLFields.setTaxRate(taxRate);
+			requestConf.setDynamicXMLFields(dynamicXMLFields);
+		} catch (Exception e) {
+			e.printStackTrace();
+			requestConf.setExceptionType(e);
+			returnError(2);
+			requestConf.debug("Exception in extactXMLFields" + ExceptionUtils.getFullStackTrace(e));
+		}
+		requestConf.debug("Ended ExtractXMLFields(): ");
+	}
+
+	private String getStatus(String amountDue, LocalDate dt) {
+		requestConf.debug("Entered getTaxInstallmentDetails() Status: ");
+		String status = "Paid";
+		double amount = ScraperUtils.getDoubleValue(amountDue);
+		LocalDate today = LocalDate.now();
+		if (amount > 0) {
+			if (today.isAfter(dt)) {
+				status = "Delinquent";
+			} else if ((today.isBefore(dt)) || today.equals(dt)) {
+				status = "Due";
+			}
+		}
+		return status;
+	}
+
+	private String formatAmount(String amount) {
+		String formatAmount = null;
+		if (!"null".equals(amount) && amount != null && StringUtils.isNotEmpty(amount)) {
+			DecimalFormat decimalFormat = new DecimalFormat("#.00");
+			amount = amount.replaceAll("[\\p{Ps}\\p{Pe}]", "").replaceAll("[^\\d+\\.]", "").trim();
+			formatAmount = decimalFormat.format(ScraperUtils.getDoubleValue(amount));
+			if (formatAmount.startsWith("."))
+				formatAmount = "0" + formatAmount;
+			NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
+			formatAmount = numberFormat.format(ScraperUtils.getDoubleValue(amount));
+		}
+		requestConf.debug(" formatted Amount(): "+ formatAmount);
+		return formatAmount;
+	}
+
+	private void getTaxInstallmentDetails(String resp1, String resp2) {
+		requestConf.debug("Entered getTaxInstallmentDetails(): ");
+		String status1 = null, installmentAmt1 = null, interest1 = null, penalty1 = null, amountDue1 = null,
+				datePaid1 = null, totalTax1 = null, dueDate1 = null, partialPayAmt1 = null,
+				status2 = null, installmentAmt2 = null, interest2 = null, penalty2 = null, amountDue2 = null,
+				datePaid2 = null, dueDate2 = null, partialPayAmt2 = null, HOExempt = null,
+				AOExempt = null, netVal = null, totalVal = null;
+		double totalInstallment1 = 0.0, totalInstallment2 = 0.0, totalPartialAmt = 0.0;
+		String totalDue = null, totalInterest = null;
+		boolean ispaid1 = false, ispaid2 = false;
+		try {
+			
+			Document doc1 = Jsoup.parse(resp1);
+			Document doc2 = Jsoup.parse(resp2);
+			Elements installmentdata = doc1.select("table[cellspacing='0'][style='border-width:0px;width:100%;border-collapse:collapse;']").get(3).
+			select("tbody").get(0).select("tr");
+			if(installmentdata.size()>0) {
+			for(int i=1; i<installmentdata.size();i++) {
+					if(installmentdata.get(i).html().contains("Click on underlined tax year to see payment detail.")) {
+						break;
+					}else {
+						totalInstallment1 = totalInstallment1 + ScraperUtils.getDoubleValue(installmentdata.get(i).select("td").get(12).text()); 
+						totalInstallment2 = totalInstallment2 + ScraperUtils.getDoubleValue(installmentdata.get(i).select("td").get(14).text());
+						if(installmentdata.get(i).select("td").get(18).text().contains("Yes")) {
+							ispaid1 = true;
+						}
+						if(installmentdata.get(i).select("td").get(20).text().contains("Yes")) {
+							ispaid2 = true;
+						}
+					}
+				}
+			taxYear = installmentdata.get(1).select("td").get(0).text();
+			if(totalInstallment1 > 0.0) {
+				installmentAmt1 = formatAmount(""+totalInstallment1);
+			}
+			if(totalInstallment2 > 0.0) {
+				installmentAmt2 = formatAmount(""+totalInstallment2);
+			}
+			
+			String stripdata = ScraperStripper.stripTags(doc2.select("table[cellspacing='0'][style='border-width:0px;width:100%;border-collapse:collapse;']").get(3).html());
+			requestConf.debug("StripData \n"+stripdata);
+			
+			if(stripdata.contains("TOTAL ASSESSED VALUE:")) {
+				netVal = totalVal = ScraperUtils.findValue(stripdata, "TOTAL ASSESSED VALUE:", 1);
+				taxRate = ScraperUtils.findValue(stripdata, "TOTAL MILL LEVY:", 1);
+				totalTax1 = ScraperUtils.findValue(stripdata, "TOTAL TAX:", 1);
+				totalDue = ScraperUtils.findValue(stripdata, "TOTAL DUE:", 1);
+				totalInterest = ""+ (ScraperUtils.getDoubleValue(ScraperUtils.findValue(stripdata, "INTEREST TO DATE:", 1)) + ScraperUtils.getDoubleValue(ScraperUtils.findValue(stripdata, "FEES:", 1)));
+			}
+			Elements receiptdata = doc2.select("table[cellspacing='0'][style='border-width:0px;width:100%;border-collapse:collapse;']").get(4).select("tbody").get(0).select("tr");
+			if(totalDue.equals("$0.00")) {
+				amountDue1 = "$0.0";
+				amountDue2 = "$0.0";
+				if(receiptdata.size() == 6) {
+					//Single Payment
+					partialPayAmt1 = partialPayAmt2 = formatAmount(""+(ScraperUtils.getDoubleValue(receiptdata.get(2).select("td").get(3).text())/2));
+					datePaid1 = datePaid2 = receiptdata.get(2).select("td").get(1).text();
+				}else if(receiptdata.size() == 7) {
+					//Two Payments
+					partialPayAmt1 = receiptdata.get(2).select("td").get(3).text();
+					partialPayAmt2 = receiptdata.get(3).select("td").get(3).text();
+					datePaid1 = receiptdata.get(2).select("td").get(1).text();
+					datePaid2 = receiptdata.get(3).select("td").get(1).text();
+				}else if (receiptdata.size() > 7) {
+					//Multiple Payments
+					for(int i = 2; i < receiptdata.size()-3 ; i++) {
+						totalPartialAmt = totalPartialAmt + ScraperUtils.getDoubleValue(receiptdata.get(i).select("td").get(3).text());
+					}
+					partialPayAmt1 = partialPayAmt2 = formatAmount(""+(totalPartialAmt/2));
+					datePaid1 = datePaid2 = receiptdata.get(receiptdata.size()-4).select("td").get(1).text();
+				}
+				interest1 = formatAmount(totalInterest);
+			}else {
+				if(receiptdata.size() < 6) {
+					//No Single Payment
+					amountDue1 = amountDue2 = formatAmount(""+ScraperUtils.getDoubleValue(totalDue)/2);
+					partialPayAmt1 = partialPayAmt2 = "$0.0";
+					interest1 = formatAmount(totalInterest);
+				}
+				if(receiptdata.size() >= 6) {
+					for(int i = 2; i < receiptdata.size()-3 ; i++) {
+						totalPartialAmt = totalPartialAmt + ScraperUtils.getDoubleValue(receiptdata.get(i).select("td").get(3).text());
+					}
+					if((totalPartialAmt < (ScraperUtils.getDoubleValue(totalTax1)/2)) && totalPartialAmt > 0.00 && ScraperUtils.getDoubleValue(totalDue)>0) {
+						amountDue1 = formatAmount(""+(ScraperUtils.getDoubleValue(installmentAmt1) - totalPartialAmt));
+						amountDue2 = formatAmount(""+(ScraperUtils.getDoubleValue(totalDue) - ScraperUtils.getDoubleValue(amountDue1)));
+					}
+					if(totalPartialAmt > 0.00 && ScraperUtils.getDoubleValue(totalDue)>0) {
+						amountDue1 = "$0.0";
+						amountDue2 = totalDue;
+					}
+					partialPayAmt1 = ""+totalPartialAmt;
+					partialPayAmt2 = "$0.0";
+					interest2 = formatAmount(totalInterest);
+					datePaid1 = receiptdata.get(receiptdata.size()-4).select("td").get(1).text();
+				}
+			}
+			if (!ispaid1) {
+				LocalDate date = LocalDate.of(Integer.parseInt(taxYear), 12, 20);
+				status1 = getStatus(amountDue1, date);
+			}else {
+				status1 = "Paid";
+			}
+			if (!ispaid2) {
+				LocalDate date = LocalDate.of(Integer.parseInt(taxYear+1), 05, 10);
+				status2 = getStatus(amountDue2, date);
+			}else {
+				status2 = "Paid";
+			}
+			}
+			
+			TaxInstallment installment = TaxInstallment.getTaxInstallmentObject(taxYear, "Annual", null, status1,
+					installmentAmt1, interest1, penalty1, amountDue1, datePaid1, null, totalTax1, null, null,
+					null, dueDate1, null, null, null, partialPayAmt1, status2, installmentAmt2, interest2, penalty2,
+					amountDue2, datePaid2, null, null, null, null, null, dueDate2, null, null, null,
+					partialPayAmt2, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+					null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+					null, null, HOExempt, AOExempt, null, null, netVal, null);
+			installment.setValueYear(taxYear);
+			installment.setTotalValue(totalVal);
+			taxInstallmentsList.add(installment);
+		} catch (Exception e) {
+			requestConf.debug("Exception in getTaxInsrallmentDetails() :" + ExceptionUtils.getFullStackTrace(e));
+			requestConf.setExceptionType(e);
+			returnError(2);
+		}
+		requestConf.debug("Ended getTaxInstallmentDetails(): ");
+	}
+
+	private void getPriorYearTaxInstallments(String responseBody) {
+		requestConf.debug("Entered getPriorYearAnnualTaxInstallments(): ");
+		try {
+			int count = 0;
+			TreeMap<String, String> prioryearsmap = new TreeMap<String, String>(Collections.reverseOrder());
+			Document doc = Jsoup.parse(responseBody);
+			requestConf.debug(doc.select("table[cellspacing='0'][style='border-width:0px;width:100%;border-collapse:collapse;']").get(3).html());
+			Elements receiptdata = doc.select("table[cellspacing='0'][style='border-width:0px;width:100%;border-collapse:collapse;']").get(3).select("tbody").get(0).select("tr");
+			
+			if(receiptdata.size() > 7) {
+				for(int i=1; i< receiptdata.size()-6; i++) {
+					String url = "https://ks278.cichosting.com/ttp/tax/Search/"+receiptdata.get(i).select("td").get(0).select("a").attr("href");
+					String year = receiptdata.get(i).select("td").get(0).select("a").text();
+					if(ScraperUtils.getDoubleValue(receiptdata.get(i).select("td").get(18).text()) > 0) {
+						redemptionAmt = redemptionAmt + ScraperUtils.getDoubleValue(receiptdata.get(i).select("td").get(18).text());
+						prioryearsmap.put(year + "-DEL", url);
+						count++;
+					}else {
+					if(count<4) {
+						prioryearsmap.put(year + "-PAID", url);
+						count++;
+					}
+					}
+				}
+			}
+			prioryearsmap.forEach((key, value) -> {
+				System.out.println("Key: " + key + ", Value: " + value);
+				String status1 = null, installmentAmt1 = null, interest1 = null, amountDue1 = null, datePaid1 = null,
+						totalTax1 = null, redemptionDate1 = null, redemptionAmount1 = null, dueDate1 = null,
+						partialPayAmt1 = null, taxType = null, priorTaxYear = null, curadresponseBody = null;
+				Elements receiptdata1 = null;
+				
+				requestConf.debug("Prior Year Url:: "+value);
+				headers.clear();
+				headers.add(new BasicNameValuePair("User-Agent",
+						"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"));
+				headers.add(new BasicNameValuePair("Upgrade-Insecure-Requests","1"));
+				headers.add(new BasicNameValuePair("Host", "ks278.cichosting.com"));
+				headers.add(new BasicNameValuePair("Referer", prioryearurl));
+				try {
+					curadresponseBody = httpWrapper.executeMethod(HttpWrapper.GET, value , headers, null, null);
+					requestConf.debug("Prior Year responseBody "+ key+ " ==>" + curadresponseBody);
+				} catch (Exception e) {
+					requestConf.error("Exception in url" + currentyearurl + " for " + requestConf.getPropertyId() + "with Exception "
+							+ ExceptionUtils.getFullStackTrace(e));
+					returnError(1);
+					requestConf.setExceptionType(e);
+					return;
+				}
+				Document doc2 = Jsoup.parse(curadresponseBody);
+				String stripdata = ScraperStripper.stripTags(doc2.select("table[cellspacing='0'][style='border-width:0px;width:100%;border-collapse:collapse;']").get(3).html());
+				requestConf.debug("StripData \n"+stripdata);
+				
+				if(stripdata.contains("TOTAL ASSESSED VALUE:")) {
+					installmentAmt1 = totalTax1 = ScraperUtils.findValue(stripdata, "TOTAL TAX:", 1);
+					partialPayAmt1 = ScraperUtils.findValue(stripdata, "RECEIVED TO DATE:", 1);
+					interest1 = "$"+ (ScraperUtils.getDoubleValue(ScraperUtils.findValue(stripdata, "INTEREST TO DATE:", 1)) + ScraperUtils.getDoubleValue(ScraperUtils.findValue(stripdata, "FEES:", 1)));
+					amountDue1 = ScraperUtils.findValue(stripdata, "TOTAL DUE:", 1);
+				}
+				priorTaxYear = key.split("-")[0];
+				if(key.contains("DEL")) {
+					taxType = "Delinquent";
+					status1 = "Delinquent";
+					if (redemptionAmt > 0) {
+						redemptionDate1 = ScraperUtils.getLastDayOfCurrentMonth().replaceAll("/", "-");
+						redemptionAmount1 = ScraperUtils.getDoubleValueInString(redemptionAmt);
+						redemptionAmount1 = formatAmount(redemptionAmount1);
+						redemptionAmt = 0;
+					}
+				}else {
+					taxType = "Prior Year Annual";
+					status1 = "Paid";
+					receiptdata1= doc2.select("table[cellspacing='0'][style='border-width:0px;width:100%;border-collapse:collapse;']").get(4).select("tbody").get(0).select("tr");
+					if (receiptdata1.size() >= 6) {
+						datePaid1 = receiptdata1.get(receiptdata1.size()-4).select("td").get(1).text();
+					}
+				}
+				TaxInstallment priorInstallmentsList = TaxInstallment.getTaxInstallmentObject(priorTaxYear, taxType, null,
+				status1, installmentAmt1, interest1, null, amountDue1, datePaid1, null, totalTax1, redemptionDate1,
+				redemptionAmount1, null, dueDate1, null, null, null, partialPayAmt1, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null);
+				priorInstallmentsList.setValueYear(priorTaxYear);
+				taxInstallmentsList.add(priorInstallmentsList);
+			});
+		} catch (Exception e) {
+			requestConf
+					.debug("Exception in getPriorYearAnnualTaxInstallments(): " + ExceptionUtils.getFullStackTrace(e));
+			requestConf.setExceptionType(e);
+			returnError(2);
+		}
+		requestConf.debug("Ended getPriorYearAnnualTaxInstallments(): ");
+	}
+	
+	private void returnError(int error) {
+		errorCode = error;
+		requestConf.setErrorCode(errorCode);
+		requestConf.debug("Error due to: " + errorCode);
+	}
+}
