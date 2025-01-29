@@ -1,108 +1,193 @@
-if (trdata != null) {
-    requestConf.debug("no of results: \t" + trdata.size());
+public void scrapeData() {
+    String url = "";
+    String responseBody = "";
 
-    if (trdata.size() > 2) {
-        requestConf.debug("MULTIPLE RECORDS FOUND - Processing all records");
+    try {
+        requestConf.debug("Starting time :" + new Timestamp(new java.util.Date().getTime()).toString());
+        String userAPN = requestConf.getPropertyId().replace(".", "-");
+        url = requestConf.scraperConfig.get(ScraperConsts.WEBSITE);
+        headers.add(new BasicNameValuePair("User-Agent",
+                "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"));
+        headers.add(new BasicNameValuePair("Upgrade-Insecure-Requests", "1"));
+        try {
+            responseBody = httpWrapper.executeMethod(HttpWrapper.GET, url, headers, null, null);
+            requestConf.debug("First ResponseBody ==>" + responseBody);
+        } catch (Exception e) {
+            requestConf.error("Exception in url" + url + " for " + requestConf.getPropertyId() + "with Exception "
+                    + ExceptionUtils.getFullStackTrace(e));
+            returnError(1);
+            requestConf.setExceptionType(e);
+            return;
+        }
+        List<String> cookies = httpWrapper.getHeaders("Set-Cookie");
+        cookie = cookies.get(0).replace(" path=/; HttpOnly; SameSite=Lax", "").trim();
+        cookie = cookie + " txtTaxLogin=true; txtModule=TAX; SecurityLevel=3";
+        requestConf.debug("cookie" + cookie);
 
-        // Loop through all records and process them
-        for (int i = 0; i < trdata.size(); i++) {
-            String recordUrl = "https://ks536.cichosting.com/ttp/tax/Search/" + trdata.get(i).attr("href");
-            requestConf.debug("Processing Record " + (i + 1) + ": " + recordUrl);
+        headers.add(new BasicNameValuePair("Host", "ks536.cichosting.com"));
+        headers.add(new BasicNameValuePair("Origin", "https://ks536.cichosting.com"));
+        headers.add(new BasicNameValuePair("Referer", url));
+        headers.add(new BasicNameValuePair("Cookie", cookie));
 
+        params.add(new BasicNameValuePair("__EVENTTARGET", ""));
+        params.add(new BasicNameValuePair("__EVENTARGUMENT", ""));
+        params.add(new BasicNameValuePair("__VIEWSTATE", ScraperUtils.getHiddnenField("__VIEWSTATE", responseBody)));
+        params.add(new BasicNameValuePair("__VIEWSTATEGENERATOR", ScraperUtils.getHiddnenField("__VIEWSTATEGENERATOR", responseBody)));
+        params.add(new BasicNameValuePair("__EVENTVALIDATION", ScraperUtils.getHiddnenField("__EVENTVALIDATION", responseBody)));
+        params.add(new BasicNameValuePair("chkRealEstate", "on"));
+        params.add(new BasicNameValuePair("txtOwnerTPayerId", ""));
+        params.add(new BasicNameValuePair("txtTaxInformation1", ""));
+        params.add(new BasicNameValuePair("txtTaxInformation2", ""));
+        params.add(new BasicNameValuePair("txtName", ""));
+        params.add(new BasicNameValuePair("rbtType", "rbtBoth"));
+        params.add(new BasicNameValuePair("txtStreetNumber", ""));
+        params.add(new BasicNameValuePair("txtStreetName", ""));
+        params.add(new BasicNameValuePair("ddlSubdivision", ""));
+        params.add(new BasicNameValuePair("txtBlock", ""));
+        params.add(new BasicNameValuePair("txtLot", ""));
+        params.add(new BasicNameValuePair("txtSection", ""));
+        params.add(new BasicNameValuePair("txtTownship", ""));
+        params.add(new BasicNameValuePair("txtRange", ""));
+        params.add(new BasicNameValuePair("txtLeaseName", ""));
+        params.add(new BasicNameValuePair("btnFindNow.x", "25"));
+        params.add(new BasicNameValuePair("btnFindNow.y", "12"));
+        if (userAPN != null && StringUtils.isNotEmpty(userAPN)) {
+            String[] apnsplit = userAPN.split("-");
+            if (apnsplit.length > 6) {
+                params.add(new BasicNameValuePair("txtMAP", apnsplit[0]));
+                params.add(new BasicNameValuePair("txtSEC", apnsplit[1]));
+                params.add(new BasicNameValuePair("txtSHT", apnsplit[2]));
+                params.add(new BasicNameValuePair("txtQTR", apnsplit[3]));
+                params.add(new BasicNameValuePair("txtBLK", apnsplit[4]));
+                params.add(new BasicNameValuePair("txtPRE", apnsplit[5]));
+                params.add(new BasicNameValuePair("txtSUF", apnsplit[6]));
+                params.add(new BasicNameValuePair("txtOWN", apnsplit[7]));
+            } else {
+                requestConf.debug("Invalid APN Format");
+                returnError(13);
+                return;
+            }
+        }
+        try {
+            responseBody = httpWrapper.executeMethod(HttpWrapper.POST, url, headers, params, null);
+            requestConf.debug("Second responseBody ==>" + responseBody);
+        } catch (Exception e) {
+            requestConf.error("Exception in url" + url + " for " + requestConf.getPropertyId() + "with Exception "
+                    + ExceptionUtils.getFullStackTrace(e));
+            returnError(1);
+            requestConf.setExceptionType(e);
+            return;
+        }
+        if (httpWrapper.statuscode == 302) {
+            String location = httpWrapper.getHeader("Location");
+            requestConf.debug("location" + location);
+            if (StringUtils.isNotEmpty(location)) {
+                url = requestConf.scraperConfig.get(ScraperConsts.HOST) + location;
+                requestConf.debug("Url" + url);
+            }
             headers.clear();
             headers.add(new BasicNameValuePair("User-Agent",
                     "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"));
             headers.add(new BasicNameValuePair("Upgrade-Insecure-Requests", "1"));
-            headers.add(new BasicNameValuePair("Host", "ks536.cichosting.com"));
-            headers.add(new BasicNameValuePair("Referer", "https://ks536.cichosting.com/ttp/tax/Search/search_tax_results.aspx"));
-
             try {
-                String response = httpWrapper.executeMethod(HttpWrapper.GET, recordUrl, headers, null, null);
-                requestConf.debug("Response for Record " + (i + 1) + " ==> " + response);
-
-                if (response.contains("No Current Tax Year Records Exist for this Selection.")) {
-                    requestConf.debug("Record " + (i + 1) + " has no tax year records.");
-                    continue;
-                }
-
-                // You may extract data from each response and process accordingly
-                extractXMLFields(response, null);
-
+                responseBody = httpWrapper.executeMethod(HttpWrapper.GET, url, headers, null, null);
+                requestConf.debug("Redirected Result responseBody ==>" + responseBody);
             } catch (Exception e) {
-                requestConf.error("Exception while processing Record " + (i + 1) + ": " + ExceptionUtils.getFullStackTrace(e));
+                requestConf.error("Exception in url" + url + " for " + requestConf.getPropertyId() + "with Exception "
+                        + ExceptionUtils.getFullStackTrace(e));
                 returnError(1);
                 requestConf.setExceptionType(e);
                 return;
             }
-        }
-
-    } else if (trdata.size() == 2) {
-        requestConf.debug("TWO RECORDS FOUND - Processing both");
-        String currentyearurl = "https://ks536.cichosting.com/ttp/tax/Search/" + trdata.get(0).attr("href");
-        String prioryearurl = "https://ks536.cichosting.com/ttp/tax/Search/" + trdata.get(1).attr("href");
-
-        requestConf.debug("currentyearurl: " + currentyearurl);
-        requestConf.debug("prioryearurl: " + prioryearurl);
-
-        headers.clear();
-        headers.add(new BasicNameValuePair("User-Agent",
-                "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"));
-        headers.add(new BasicNameValuePair("Upgrade-Insecure-Requests", "1"));
-        headers.add(new BasicNameValuePair("Host", "ks536.cichosting.com"));
-        headers.add(new BasicNameValuePair("Referer", "https://ks536.cichosting.com/ttp/tax/Search/search_tax_results.aspx"));
-
-        try {
-            String responseBody = httpWrapper.executeMethod(HttpWrapper.GET, currentyearurl, headers, null, null);
-            requestConf.debug("Current Year responseBody ==>" + responseBody);
-            if (responseBody.contains("No Current Tax Year Records Exist for this Selection.")) {
-                returnError(14);
-                return;
-            }
-
-            String priorresponseBody = httpWrapper.executeMethod(HttpWrapper.GET, prioryearurl, headers, null, null);
-            requestConf.debug("Prior Year responseBody ==>" + priorresponseBody);
-
-            extractXMLFields(responseBody, priorresponseBody);
-        } catch (Exception e) {
-            requestConf.error("Exception while processing records: " + ExceptionUtils.getFullStackTrace(e));
-            returnError(1);
-            requestConf.setExceptionType(e);
+        } else {
+            requestConf.debug("NO RECORDS FOUND");
+            returnError(11);
             return;
         }
-
-    } else if (trdata.size() == 1) {
-        requestConf.debug("SINGLE RECORD FOUND - Processing");
-        String singleRecordUrl = "https://ks536.cichosting.com/ttp/tax/Search/" + trdata.get(0).attr("href");
-
-        requestConf.debug("singleRecordUrl: " + singleRecordUrl);
-
-        headers.clear();
-        headers.add(new BasicNameValuePair("User-Agent",
-                "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"));
-        headers.add(new BasicNameValuePair("Upgrade-Insecure-Requests", "1"));
-        headers.add(new BasicNameValuePair("Host", "ks536.cichosting.com"));
-        headers.add(new BasicNameValuePair("Referer", "https://ks536.cichosting.com/ttp/tax/Search/search_tax_results.aspx"));
-
-        try {
-            String responseBody = httpWrapper.executeMethod(HttpWrapper.GET, singleRecordUrl, headers, null, null);
-            requestConf.debug("Response for Single Record ==> " + responseBody);
-
-            if (responseBody.contains("No Current Tax Year Records Exist for this Selection.")) {
-                returnError(14);
-                return;
+        Document document = Jsoup.parse(responseBody);
+        Elements trdata = document.select("table[id=tblResult]").select("a[class=links]");
+        if (trdata != null) {
+            requestConf.debug("no of results: \t" + trdata.size());
+            if (trdata.size() > 2) {
+                requestConf.debug("MULTIPLE MATCHES FOUND");
+                // Logic to handle multiple records
+                for (int i = 0; i < trdata.size(); i++) {
+                    String recordUrl = "https://ks536.cichosting.com/ttp/tax/Search/" + trdata.get(i).attr("href");
+                    requestConf.debug("Processing record URL: " + recordUrl);
+                    headers.clear();
+                    headers.add(new BasicNameValuePair("User-Agent",
+                            "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"));
+                    headers.add(new BasicNameValuePair("Upgrade-Insecure-Requests", "1"));
+                    headers.add(new BasicNameValuePair("Host", "ks536.cichosting.com"));
+                    headers.add(new BasicNameValuePair("Referer", "https://ks536.cichosting.com/ttp/tax/Search/search_tax_results.aspx"));
+                    try {
+                        String recordResponseBody = httpWrapper.executeMethod(HttpWrapper.GET, recordUrl, headers, null, null);
+                        requestConf.debug("Record " + (i + 1) + " responseBody ==>" + recordResponseBody);
+                        if (recordResponseBody.contains("No Current Tax Year Records Exist for this Selection.")) {
+                            requestConf.debug("No current tax year records for record " + (i + 1));
+                            continue;
+                        }
+                        // Process each record as needed
+                        extractXMLFields(recordResponseBody, null);
+                    } catch (Exception e) {
+                        requestConf.error("Exception in url" + recordUrl + " for " + requestConf.getPropertyId() + "with Exception "
+                                + ExceptionUtils.getFullStackTrace(e));
+                        continue; // Continue processing other records even if one fails
+                    }
+                }
+            } else {
+                requestConf.debug("SINGLE RECORD FOUND");
+                String priorresponseBody = null;
+                if (StringUtils.isNotBlank(responseBody)
+                        && StringUtils.containsIgnoreCase(responseBody, "Search Tax Information Results")) {
+                    if (trdata.size() == 2) {
+                        currentyearurl = "https://ks536.cichosting.com/ttp/tax/Search/" + trdata.get(0).attr("href");
+                        prioryearurl = "https://ks536.cichosting.com/ttp/tax/Search/" + trdata.get(1).attr("href");
+                        requestConf.debug("currentyearurl" + currentyearurl);
+                        requestConf.debug("prioryearurl" + prioryearurl);
+                        headers.clear();
+                        headers.add(new BasicNameValuePair("User-Agent",
+                                "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"));
+                        headers.add(new BasicNameValuePair("Upgrade-Insecure-Requests", "1"));
+                        headers.add(new BasicNameValuePair("Host", "ks536.cichosting.com"));
+                        headers.add(new BasicNameValuePair("Referer", "https://ks536.cichosting.com/ttp/tax/Search/search_tax_results.aspx"));
+                        try {
+                            responseBody = httpWrapper.executeMethod(HttpWrapper.GET, currentyearurl, headers, null, null);
+                            requestConf.debug("Current Year responseBody ==>" + responseBody);
+                        } catch (Exception e) {
+                            requestConf.error("Exception in url" + url + " for " + requestConf.getPropertyId() + "with Exception "
+                                    + ExceptionUtils.getFullStackTrace(e));
+                            returnError(1);
+                            requestConf.setExceptionType(e);
+                            return;
+                        }
+                        if (responseBody.contains("No Current Tax Year Records Exist for this Selection.")) {
+                            returnError(14);
+                            return;
+                        }
+                        try {
+                            priorresponseBody = httpWrapper.executeMethod(HttpWrapper.GET, prioryearurl, headers, null, null);
+                            requestConf.debug("Prior Year responseBody ==>" + priorresponseBody);
+                        } catch (Exception e) {
+                            requestConf.error("Exception in url" + url + " for " + requestConf.getPropertyId() + "with Exception "
+                                    + ExceptionUtils.getFullStackTrace(e));
+                            returnError(1);
+                            requestConf.setExceptionType(e);
+                            return;
+                        }
+                        extractXMLFields(responseBody, priorresponseBody);
+                    }
+                } else {
+                    returnError(2);
+                    return;
+                }
             }
-
-            extractXMLFields(responseBody, null);
-        } catch (Exception e) {
-            requestConf.error("Exception while processing single record: " + ExceptionUtils.getFullStackTrace(e));
-            returnError(1);
-            requestConf.setExceptionType(e);
-            return;
         }
-
-    } else {
-        requestConf.debug("NO RECORDS FOUND");
-        returnError(2);
-        return;
+    } catch (Exception e) {
+        requestConf.debug("Global Exception" + e + " for parcel: " + requestConf.getPropertyId());
+        requestConf.setErrorCode(2);
+        requestConf.setExceptionType(e);
+    } finally {
+        requestConf.debug("Ending Time of KS CLAY county Scraping :" + new Timestamp(System.currentTimeMillis()));
     }
 }
