@@ -1,68 +1,108 @@
-  Document document = Jsoup.parse(responseBody);
-        // Select all <a> tags with class "links"
-        Elements trdata = document.select("table[id=tblResult]").select("a[class=links]");
-        
-        // Filter the links to match specific ones
-        Elements filteredLinks = trdata.stream()
-            .filter(link -> {
-                String text = link.text().trim();
-                return "currentTaxes".equals(text) || "Tax History".equals(text);
-            })
-            .collect(Collectors.toCollection(Elements::new));
-        
-        if (filteredLinks != null) {
-            requestConf.debug("no of results: \t" + filteredLinks.size());
-            if (filteredLinks.size() > 2) {
-                requestConf.debug("MULTIPLE MATCHES FOUND");
-                returnError(11);
-                return;
-            } else {
-                requestConf.debug("SINGLE RECORD FOUND");
-                String priorresponseBody = null;
-                if (StringUtils.isNotBlank(responseBody) && StringUtils.containsIgnoreCase(responseBody, "Search Tax Information Results")) {
-                    if (filteredLinks.size() == 2) {
-                        currentyearurl = "https://ks536.cichosting.com/ttp/tax/Search/" + filteredLinks.get(0).attr("href");
-                        prioryearurl = "https://ks536.cichosting.com/ttp/tax/Search/" + filteredLinks.get(1).attr("href");
-                        requestConf.debug("currentyearurl: " + currentyearurl);
-                        requestConf.debug("prioryearurl: " + prioryearurl);
-                        
-                        // Perform additional operations for current and prior year URLs
-                        headers.clear();
-                        headers.add(new BasicNameValuePair("User-Agent",
-                                "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"));
-                        headers.add(new BasicNameValuePair("Upgrade-Insecure-Requests", "1"));
-                        headers.add(new BasicNameValuePair("Host", "ks536.cichosting.com"));
-                        headers.add(new BasicNameValuePair("Referer", "https://ks536.cichosting.com/ttp/tax/Search/search_tax_results.aspx"));
-                        
-                        try {
-                            responseBody = httpWrapper.executeMethod(HttpWrapper.GET, currentyearurl, headers, null, null);
-                            requestConf.debug("Current Year responseBody ==>" + responseBody);
-                        } catch (Exception e) {
-                            requestConf.error("Exception in url" + url + " for " + requestConf.getPropertyId() + "with Exception "
-                                    + ExceptionUtils.getFullStackTrace(e));
-                            returnError(1);
-                            requestConf.setExceptionType(e);
-                            return;
-                        }
-                        if (responseBody.contains("No Current Tax Year Records Exist for this Selection.")) {
-                            returnError(14);
-                            return;
-                        }
-                        try {
-                            priorresponseBody = httpWrapper.executeMethod(HttpWrapper.GET, prioryearurl, headers, null, null);
-                            requestConf.debug("Prior Year responseBody ==>" + priorresponseBody);
-                        } catch (Exception e) {
-                            requestConf.error("Exception in url" + url + " for " + requestConf.getPropertyId() + "with Exception "
-                                    + ExceptionUtils.getFullStackTrace(e));
-                            returnError(1);
-                            requestConf.setExceptionType(e);
-                            return;
-                        }
-                        extractXMLFields(responseBody, priorresponseBody);
-                    }
-                } else {
-                    returnError(2);
-                    return;
+if (trdata != null) {
+    requestConf.debug("no of results: \t" + trdata.size());
+
+    if (trdata.size() > 2) {
+        requestConf.debug("MULTIPLE RECORDS FOUND - Processing all records");
+
+        // Loop through all records and process them
+        for (int i = 0; i < trdata.size(); i++) {
+            String recordUrl = "https://ks536.cichosting.com/ttp/tax/Search/" + trdata.get(i).attr("href");
+            requestConf.debug("Processing Record " + (i + 1) + ": " + recordUrl);
+
+            headers.clear();
+            headers.add(new BasicNameValuePair("User-Agent",
+                    "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"));
+            headers.add(new BasicNameValuePair("Upgrade-Insecure-Requests", "1"));
+            headers.add(new BasicNameValuePair("Host", "ks536.cichosting.com"));
+            headers.add(new BasicNameValuePair("Referer", "https://ks536.cichosting.com/ttp/tax/Search/search_tax_results.aspx"));
+
+            try {
+                String response = httpWrapper.executeMethod(HttpWrapper.GET, recordUrl, headers, null, null);
+                requestConf.debug("Response for Record " + (i + 1) + " ==> " + response);
+
+                if (response.contains("No Current Tax Year Records Exist for this Selection.")) {
+                    requestConf.debug("Record " + (i + 1) + " has no tax year records.");
+                    continue;
                 }
+
+                // You may extract data from each response and process accordingly
+                extractXMLFields(response, null);
+
+            } catch (Exception e) {
+                requestConf.error("Exception while processing Record " + (i + 1) + ": " + ExceptionUtils.getFullStackTrace(e));
+                returnError(1);
+                requestConf.setExceptionType(e);
+                return;
             }
         }
+
+    } else if (trdata.size() == 2) {
+        requestConf.debug("TWO RECORDS FOUND - Processing both");
+        String currentyearurl = "https://ks536.cichosting.com/ttp/tax/Search/" + trdata.get(0).attr("href");
+        String prioryearurl = "https://ks536.cichosting.com/ttp/tax/Search/" + trdata.get(1).attr("href");
+
+        requestConf.debug("currentyearurl: " + currentyearurl);
+        requestConf.debug("prioryearurl: " + prioryearurl);
+
+        headers.clear();
+        headers.add(new BasicNameValuePair("User-Agent",
+                "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"));
+        headers.add(new BasicNameValuePair("Upgrade-Insecure-Requests", "1"));
+        headers.add(new BasicNameValuePair("Host", "ks536.cichosting.com"));
+        headers.add(new BasicNameValuePair("Referer", "https://ks536.cichosting.com/ttp/tax/Search/search_tax_results.aspx"));
+
+        try {
+            String responseBody = httpWrapper.executeMethod(HttpWrapper.GET, currentyearurl, headers, null, null);
+            requestConf.debug("Current Year responseBody ==>" + responseBody);
+            if (responseBody.contains("No Current Tax Year Records Exist for this Selection.")) {
+                returnError(14);
+                return;
+            }
+
+            String priorresponseBody = httpWrapper.executeMethod(HttpWrapper.GET, prioryearurl, headers, null, null);
+            requestConf.debug("Prior Year responseBody ==>" + priorresponseBody);
+
+            extractXMLFields(responseBody, priorresponseBody);
+        } catch (Exception e) {
+            requestConf.error("Exception while processing records: " + ExceptionUtils.getFullStackTrace(e));
+            returnError(1);
+            requestConf.setExceptionType(e);
+            return;
+        }
+
+    } else if (trdata.size() == 1) {
+        requestConf.debug("SINGLE RECORD FOUND - Processing");
+        String singleRecordUrl = "https://ks536.cichosting.com/ttp/tax/Search/" + trdata.get(0).attr("href");
+
+        requestConf.debug("singleRecordUrl: " + singleRecordUrl);
+
+        headers.clear();
+        headers.add(new BasicNameValuePair("User-Agent",
+                "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"));
+        headers.add(new BasicNameValuePair("Upgrade-Insecure-Requests", "1"));
+        headers.add(new BasicNameValuePair("Host", "ks536.cichosting.com"));
+        headers.add(new BasicNameValuePair("Referer", "https://ks536.cichosting.com/ttp/tax/Search/search_tax_results.aspx"));
+
+        try {
+            String responseBody = httpWrapper.executeMethod(HttpWrapper.GET, singleRecordUrl, headers, null, null);
+            requestConf.debug("Response for Single Record ==> " + responseBody);
+
+            if (responseBody.contains("No Current Tax Year Records Exist for this Selection.")) {
+                returnError(14);
+                return;
+            }
+
+            extractXMLFields(responseBody, null);
+        } catch (Exception e) {
+            requestConf.error("Exception while processing single record: " + ExceptionUtils.getFullStackTrace(e));
+            returnError(1);
+            requestConf.setExceptionType(e);
+            return;
+        }
+
+    } else {
+        requestConf.debug("NO RECORDS FOUND");
+        returnError(2);
+        return;
+    }
+}
