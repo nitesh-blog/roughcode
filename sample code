@@ -1,359 +1,1536 @@
-<!DOCTYPE html>
-<HTML>
-    <HEAD>
-        <title>TAX INFORMATION MODULE</title>
-        <meta content="Microsoft Visual Studio .NET 7.1" name="GENERATOR">
-        <meta content="Visual Basic .NET 7.1" name="CODE_LANGUAGE">
-        <meta content="JavaScript" name="vs_defaultClientScript">
-        <meta content="http://schemas.microsoft.com/intellisense/ie5" name="vs_targetSchema">
-        <LINK href="../Styles.css" type="text/css" rel="stylesheet">
-    </HEAD>
-    <body class="background" leftMargin="0" topMargin="0">
-        <form name="Form1" method="post" action="./search_tax_results.aspx" id="Form1">
-            <input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value=""/>
-            <input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value=""/>
-            <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUINjA1NTgxNzAPZBYCAgEPZBYEAgEPZBYEAgEPFgIeA3NyYwUVLi4vaW1hZ2VzL3RvcC90YXguZ2lmZAIDDxYCHwAFJS4uL2ltYWdlcy90b3AvbG9nb19Pc2Jvcm5lX2NvdW50eS5qcGdkAgMPFgIeBGhyZWYFHmh0dHBzOi8vd3d3Lm9zYm9ybmVjb3VudHkub3JnL2Rk4GEhDMelght1Retksppx9Irs5u0jvK62mHVaLBolOHI="/>
-            <script type="text/javascript">
-                <!--
-                var theForm = document.forms['Form1'];
-                if (!theForm) {
-                    theForm = document.Form1;
-                }
-                function __doPostBack(eventTarget, eventArgument) {
-                    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
-                        theForm.__EVENTTARGET.value = eventTarget;
-                        theForm.__EVENTARGUMENT.value = eventArgument;
-                        theForm.submit();
-                    }
-                }
-                // -->
-            </script>
-            <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="7505015A"/>
-            <input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAALhHMn+aMNXg7cpYgfh7aYmUbCfiG057tGyfVb/4Ps0fw5GRXs5/5sCIZwSnD8yp6c/qrccNGH+VDs1teschADf"/>
-            <table height="100%" cellSpacing="0" cellPadding="0" width="100%" bgColor="#ffffff" border="0">
-                <tr>
-                    <td vAlign="top">
-                        <table height="100%" cellSpacing="0" cellPadding="0" width="100%" border="0">
-                            <tr>
-                                <td vAlign="top" align="center">
-                                    <LINK href="../Styles.css" type="text/css" rel="stylesheet">
-                                    <table width="100%" height="105" border="0" cellpadding="0" cellspacing="0" ID="Table1">
-                                        <tr>
-                                            <td height="105" valign="top">
-                                                <table width="100%" height="92" border="0" cellpadding="0" cellspacing="0" ID="Table2">
-                                                    <tr>
-                                                        <td width="4%" height="89" class="top_color_logo">&nbsp;</td>
-                                                        <td width="51%" class="top_color_logo">
-                                                            <img src="../images/top/tax.gif" id="Top1_ImageSystem" width="232" height="64"/>
-                                                        </td>
-                                                        <td align="right" class="top_color_logo">
-                                                            <img src="../images/top/logo_Osborne_county.jpg" id="Top1_ImageCounty" class="top_color_logo"/>
-                                                        </td>
-                                                        <td width="2%" class="top_color_logo">&nbsp;</td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <table cellSpacing="0" cellPadding="0" width="100%" bgColor="#ffffff" border="0">
-                                        <tr>
-                                            <td vAlign="top" align="center">
-                                                <table cellSpacing="0" cellPadding="0" width="100%" border="0">
-                                                    <tr>
-                                                        <td width="75%" bgColor="#f0f6f7">&nbsp;</td>
-                                                        <td width="15%" bgColor="#f0f6f7">
-                                                            <a href="https://www.osbornecounty.org/" id="aDefault" class="links" title="Return To County Website ">Return 
-																		To County Website</a>
-                                                        </td>
-                                                        <td width="5%" bgColor="#f0f6f7">
-                                                            <a id="aLogout" href="javascript:__doPostBack(&#39;aLogout&#39;,&#39;&#39;)">Logout</a>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                                <br>
-                                                <tr>
-                                                    <td>
-                                                        <span id="errView"></span>
-                                                    </td>
-                                                </tr>
-                                    </table>
-                                    <table borderColor="#ffffff" cellSpacing="0" cellPadding="0" width="95%" border="0">
-                                        <tr>
-                                            <td height="14">
-                                                <span class="write">Search Tax Information Results </span>
-                                                <br>
-                                                <br>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <table id="tblResult" border="0" style="width:95%;">
-                                        <tr>
-                                            <td valign="top" style="width:85%;">
-                                                <table cellspacing="1" cellpadding="1" border="0" style="border-width:0px;width:100%;">
-                                                    <tr>
-                                                        <td class="subwrite" align="left" valign="middle" rowspan="1" style="background-color:#F0F6F7;height:18px;width:10%;">Type</td>
-                                                        <td class="subwrite" align="left" valign="middle" rowspan="1" style="background-color:#F0F6F7;height:18px;width:35%;">CAMA Number</td>
-                                                        <td class="subwrite" align="left" valign="middle" rowspan="1" style="background-color:#F0F6F7;height:18px;width:35%;">Tax Identification</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:20%;">RL</td>
-                                                        <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:40%;">259 32 0 00 00 003 00 0 01</td>
-                                                        <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:40%;">180-200002820</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="subwrite" colspan="5">
-                                                            <table cellspacing="0" cellpadding="0" border="0" style="border-width:0px;width:100%;border-collapse:collapse;">
-                                                                <tr>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:15%;">
-                                                                        <span class='subwrite'>Owner ID </span>
-                                                                        &nbsp;
-                                                                    </td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:10%;">JASO00003</td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" colspan="3" rowspan="1" style="height:18px;width:75%;">JASON W RATHBUN</td>
-                                                                </tr>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="subwrite" colspan="5">
-                                                            <table cellspacing="0" cellpadding="0" border="0" style="border-width:0px;width:100%;border-collapse:collapse;">
-                                                                <tr>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:15%;">
-                                                                        <span class='subwrite'>Taxpayer ID </span>
-                                                                        &nbsp;
-                                                                    </td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:10%;">JASO00003</td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:75%;">JASON W RATHBUN</td>
-                                                                </tr>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="taxModuleHeader4c" align="left" valign="middle" colspan="2" rowspan="1" style="height:18px;width:40%;">Situs Address: 0   COUNTY;  67473</td>
-                                                        <td class="taxModuleHeader4c" align="left" valign="middle" colspan="3" rowspan="1" style="height:18px;width:60%;"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="subwrite" colspan="5">
-                                                            <table cellspacing="0" cellpadding="0" border="0" style="border-width:0px;width:100%;border-collapse:collapse;">
-                                                                <tr>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:10%;">
-                                                                        <span class='subwrite'>Subdivision </span>
-                                                                    </td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:20%;">&nbsp;</td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:8%;">
-                                                                        <span class='subwrite'>Block</span>
-                                                                    </td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:6%;"></td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:8%;">
-                                                                        <span class='subwrite'>Lot(s)</span>
-                                                                    </td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:6%;"></td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:8%;">
-                                                                        <span class='subwrite'>Section</span>
-                                                                    </td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:6%;">32</td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:8%;">
-                                                                        <span class='subwrite'>Township</span>
-                                                                    </td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:6%;">10</td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:8%;">
-                                                                        <span class='subwrite'>Range</span>
-                                                                    </td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:6%;">15</td>
-                                                                </tr>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="taxModuleHeader4c" align="left" valign="middle" colspan="5" rowspan="1" style="height:18px;width:100%;">
-                                                            <span class='subwrite'>Tract 1 </span>
-                                                            200002820
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                            <td valign="middle" style="width:15%;">
-                                                <table cellspacing="1" cellpadding="1" border="0" style="border-width:0px;width:100%;">
-                                                    <tr>
-                                                        <td align="center" valign="middle" rowspan="1" style="background-color:#ffffff;height:18px;width:100%;">
-                                                            <A class="links" title="Current Taxes" href="current_tax.aspx?_CamaNumber=259320000000300001&_Type=RL&_TaxUnit=180&_TaxParcel=200002820&_StreetNumber=0&_StreetName=COUNTY&_StreetDirection=&_ZipCode=67473&_Subdivision=&_Block=&_Lot=&_Section=32&_Township=10&_Range=15&_Tract1=200002820&_Tract2=&_Tract3=&_Tract4=++++++++++++++++++++++++++++++&_LeaseName=&_LeaseNum=&_WarrantNum=-&_TotalDue=0.00&_SpecialsYear=&_SpecialsNumber=&_SpecialsDescription=&_StatementYear=&_StatementNum=&_StatementLine=&_Acres=&_Legal=&_StreetTypePrefix=&_StreetTypeSuffix=&_City=&_State=&_OwnerID=JASO00003&_TpayerID=JASO00003&_OwnerName1=JASON+W+RATHBUN&_OwnerName2=&_TpayerName1=JASON+W+RATHBUN&_TpayerName2=&_MailingAddress1=&_MailingAddress2=">Current Taxes</a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="center" valign="middle" colspan="3" rowspan="1" style="background-color:#ffffff;height:18px;width:100%;">
-                                                            <A class="links" title="Tax History" href="tax_history.aspx?_CamaNumber=259320000000300001&_Type=RL&_TaxUnit=180&_TaxParcel=200002820&_StreetNumber=0&_StreetName=COUNTY&_StreetDirection=&_ZipCode=67473&_Subdivision=&_Block=&_Lot=&_Section=32&_Township=10&_Range=15&_Tract1=200002820&_Tract2=&_Tract3=&_Tract4=++++++++++++++++++++++++++++++&_LeaseName=&_LeaseNum=&_WarrantNum=-&_TotalDue=0.00&_SpecialsYear=&_SpecialsNumber=&_SpecialsDescription=&_StatementYear=&_StatementNum=&_StatementLine=&_Acres=&_Legal=&_StreetTypePrefix=&_StreetTypeSuffix=&_City=&_State=&_OwnerID=JASO00003&_TpayerID=JASO00003&_OwnerName1=JASON+W+RATHBUN&_OwnerName2=&_TpayerName1=JASON+W+RATHBUN&_TpayerName2=&_MailingAddress1=&_MailingAddress2=">Tax History</a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="center" valign="middle" colspan="2" rowspan="1" style="background-color:#ffffff;height:18px;width:100%;">
-                                                            <A class="links" title="Real Estate Detail" href="https://ks536.cichosting.com/webportal/appraiser/Details.aspx?pid=2593200000003000">Real Estate Detail</a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="center" valign="middle" colspan="2" rowspan="1" style="background-color:#ffffff;height:18px;width:100%;"></td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td align="center" valign="middle" colspan="2" rowspan="1" style="background-color:#000080;height:1px;width:100%;"></td>
-                                        </tr>
-                                        <tr>
-                                            <td valign="top" style="width:85%;">
-                                                <table cellspacing="1" cellpadding="1" border="0" style="border-width:0px;width:100%;">
-                                                    <tr>
-                                                        <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:20%;">RL</td>
-                                                        <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:40%;">259 32 0 00 00 003 00 0 01</td>
-                                                        <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:40%;">180-200002820</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="subwrite" colspan="5">
-                                                            <table cellspacing="0" cellpadding="0" border="0" style="border-width:0px;width:100%;border-collapse:collapse;">
-                                                                <tr>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:15%;">
-                                                                        <span class='subwrite'>Owner ID </span>
-                                                                        &nbsp;
-                                                                    </td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:10%;">JASO00004</td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" colspan="3" rowspan="1" style="height:18px;width:75%;">JASON W RATHBUN</td>
-                                                                </tr>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="subwrite" colspan="5">
-                                                            <table cellspacing="0" cellpadding="0" border="0" style="border-width:0px;width:100%;border-collapse:collapse;">
-                                                                <tr>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:15%;">
-                                                                        <span class='subwrite'>Taxpayer ID </span>
-                                                                        &nbsp;
-                                                                    </td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:10%;">JASO00004</td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:75%;">JASON W RATHBUN</td>
-                                                                </tr>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="taxModuleHeader4c" align="left" valign="middle" colspan="2" rowspan="1" style="height:18px;width:40%;">Situs Address: 657   CORD;  </td>
-                                                        <td class="taxModuleHeader4c" align="left" valign="middle" colspan="3" rowspan="1" style="height:18px;width:60%;"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="subwrite" colspan="5">
-                                                            <table cellspacing="0" cellpadding="0" border="0" style="border-width:0px;width:100%;border-collapse:collapse;">
-                                                                <tr>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:10%;">
-                                                                        <span class='subwrite'>Subdivision </span>
-                                                                    </td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:20%;">&nbsp;Invalid Code</td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:8%;">
-                                                                        <span class='subwrite'>Block</span>
-                                                                    </td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:6%;"></td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:8%;">
-                                                                        <span class='subwrite'>Lot(s)</span>
-                                                                    </td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:6%;"></td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:8%;">
-                                                                        <span class='subwrite'>Section</span>
-                                                                    </td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:6%;">32</td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:8%;">
-                                                                        <span class='subwrite'>Township</span>
-                                                                    </td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:6%;">10</td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:8%;">
-                                                                        <span class='subwrite'>Range</span>
-                                                                    </td>
-                                                                    <td class="taxModuleHeader4a" align="left" valign="middle" rowspan="1" style="height:18px;width:6%;">15</td>
-                                                                </tr>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="taxModuleHeader4c" align="left" valign="middle" colspan="5" rowspan="1" style="height:18px;width:100%;">
-                                                            <span class='subwrite'>Tract 1 </span>
-                                                            200002820
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                            <td valign="middle" style="width:15%;">
-                                                <table cellspacing="1" cellpadding="1" border="0" style="border-width:0px;width:100%;">
-                                                    <tr>
-                                                        <td align="center" valign="middle" rowspan="1" style="background-color:#ffffff;height:18px;width:100%;">
-                                                            <A class="links" title="Current Taxes" href="current_tax.aspx?_CamaNumber=259320000000300001&_Type=RL&_TaxUnit=180&_TaxParcel=200002820&_StreetNumber=657&_StreetName=CORD&_StreetDirection=&_ZipCode=&_Subdivision=Invalid+Code&_Block=&_Lot=&_Section=32&_Township=10&_Range=15&_Tract1=200002820&_Tract2=&_Tract3=&_Tract4=++++++++++++++++++++++++++++++&_LeaseName=&_LeaseNum=&_WarrantNum=-&_TotalDue=0.00&_SpecialsYear=&_SpecialsNumber=&_SpecialsDescription=&_StatementYear=&_StatementNum=&_StatementLine=&_Acres=&_Legal=&_StreetTypePrefix=&_StreetTypeSuffix=&_City=&_State=&_OwnerID=JASO00004&_TpayerID=JASO00004&_OwnerName1=JASON+W+RATHBUN&_OwnerName2=&_TpayerName1=JASON+W+RATHBUN&_TpayerName2=&_MailingAddress1=&_MailingAddress2=">Current Taxes</a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="center" valign="middle" colspan="3" rowspan="1" style="background-color:#ffffff;height:18px;width:100%;">
-                                                            <A class="links" title="Tax History" href="tax_history.aspx?_CamaNumber=259320000000300001&_Type=RL&_TaxUnit=180&_TaxParcel=200002820&_StreetNumber=657&_StreetName=CORD&_StreetDirection=&_ZipCode=&_Subdivision=Invalid+Code&_Block=&_Lot=&_Section=32&_Township=10&_Range=15&_Tract1=200002820&_Tract2=&_Tract3=&_Tract4=++++++++++++++++++++++++++++++&_LeaseName=&_LeaseNum=&_WarrantNum=-&_TotalDue=0.00&_SpecialsYear=&_SpecialsNumber=&_SpecialsDescription=&_StatementYear=&_StatementNum=&_StatementLine=&_Acres=&_Legal=&_StreetTypePrefix=&_StreetTypeSuffix=&_City=&_State=&_OwnerID=JASO00004&_TpayerID=JASO00004&_OwnerName1=JASON+W+RATHBUN&_OwnerName2=&_TpayerName1=JASON+W+RATHBUN&_TpayerName2=&_MailingAddress1=&_MailingAddress2=">Tax History</a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="center" valign="middle" colspan="2" rowspan="1" style="background-color:#ffffff;height:18px;width:100%;">
-                                                            <A class="links" title="Real Estate Detail" href="https://ks536.cichosting.com/webportal/appraiser/Details.aspx?pid=2593200000003000">Real Estate Detail</a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="center" valign="middle" colspan="2" rowspan="1" style="background-color:#ffffff;height:18px;width:100%;"></td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td align="center" valign="middle" colspan="2" rowspan="1" style="background-color:#000080;height:1px;width:100%;"></td>
-                                        </tr>
-                                    </table>
-                                    <br>
-                                    <table borderColor="#ffffff" cellSpacing="0" cellPadding="0" width="95%" border="0">
-                                        <tr>
-                                            <td></td>
-                                        </tr>
-                                    </table>
-                                    <br>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td vAlign="top" align="center" height="0">&nbsp;</td>
-                            </tr>
-                        </table>
+<table border="0" cellpadding="0" cellspacing="0" style="width:100%;">
+        <tbody><tr>
+            <td style="width:25px">&nbsp;</td>
+            <td style="text-align: right">
+                <div class="tabContent" style="text-align:right">
+                    <a id="MasterContentPlaceHolder_RegisteredUserLoginLink" href="../Login.aspx?pid=2593200000003000&amp;rdl=True">Registered User Login</a>
+                    &nbsp; |&nbsp;
+                    <a id="MasterContentPlaceHolder_NewSearchHyperLink" href="Default.aspx">New Search</a>
+                    &nbsp; |&nbsp;
+                    <a id="MasterContentPlaceHolder_ResultsHyperLink" href="Results.aspx">Back to Results</a>
+                </div>
+            </td>
+            <td style="width:25px">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width:25px">&nbsp;</td>
+            <td>
+                <div class="write">
+                    <span id="MasterContentPlaceHolder_DetailsHeader">Parcel Details for 071-259-32-0-00-00-003.00-0</span>
+                </div>
+                <div class="subwritewrite">
+                    <span id="MasterContentPlaceHolder_DetailsQuickReference"></span>
+                </div>
+                <div class="tabContent" style="text-align:right">
+                    <a id="MasterContentPlaceHolder_GisHyperLink" target="_blank"></a>
+                    &nbsp;
+                    
+                    &nbsp;
+                    <a id="MasterContentPlaceHolder_TaxHyperLink" href="https://ks536.cichosting.com/ttp/tax/Search/search_tax_results.aspx?pid=2593200000003000" target="TaxDetails">View Tax Detail</a>
+                </div> 
+                <div class="clearer"></div>
+                <br>
+            </td>
+            <td style="width:25px">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width:25px">&nbsp;</td>
+            <td>
+                <div class="tabContent" style="margin:5px; vertical-align: middle;">
+                    &nbsp;
+                    &nbsp;&nbsp;
+                    <span id="MasterContentPlaceHolder_PageLabel2">Page 1 of 1</span>&nbsp;&nbsp;
+                    &nbsp;
+                    
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="image" name="ctl00$MasterContentPlaceHolder$Print" id="MasterContentPlaceHolder_Print" title="Print details..." text="Button" src="../Images/printButton.png">
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                    
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="image" name="ctl00$MasterContentPlaceHolder$Email" id="MasterContentPlaceHolder_Email" title="Email details..." text="Button" src="../Images/emailButton.png">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </div>
+            </td>
+            <td style="width:25px">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width:25px">&nbsp;</td>
+            <td>
+                <table width="100%">
+                    <tbody><tr valign="top">
+                        <td width="50%">
+                            <div id="MasterContentPlaceHolder_pApprOwnersDetails">
+	
+                    <div id="MasterContentPlaceHolder_ApprOwnersDetails_TitlePanel">
+		
+    <div class="accordionHeader"> 
+        <div style="float: left;">Owner Information</div>
+        <span id="MasterContentPlaceHolder_ApprOwnersDetails_InformationHeader" style="margin-left:10px;"></span> 
+        <div style="float: right; vertical-align: middle;"> 
+            <img id="MasterContentPlaceHolder_ApprOwnersDetails_PanelToggle" src="../App_Themes/default/images/collapse_blue.jpg" style="border-width:0px">
+        </div> 
+        <div class="clearer"></div>
+    </div> 
+
+	</div>
+<div id="" style="border: 0px; margin: 0px; padding: 0px; overflow-y: hidden; visibility: visible; height: auto; display: block;" class=""><div id="MasterContentPlaceHolder_ApprOwnersDetails_UpdatePanel" style="visibility: visible; height: auto;">
+		
+    
+            <table class="searchContent">
+                <tbody><tr style="vertical-align: top;">
+                    <td width="25%">
+                        <div class="subwrite">
+                            <span id="MasterContentPlaceHolder_ApprOwnersDetails_ResultsRepeater_OwnerNameLabel_0">Owner's Name:</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <span id="MasterContentPlaceHolder_ApprOwnersDetails_ResultsRepeater_OwnerName_0">RATHBUN, JASON W</span>
+                        </div>
                     </td>
                 </tr>
-                <tr>
-                    <td vAlign="top">
-                        <table cellSpacing="0" cellPadding="0" width="100%" border="0">
-                            <tr>
-                                <td width="79%" bgColor="#f0f6f7">&nbsp;</td>
-                                <td width="21%" bgColor="#f0f6f7">
-                                    <A class="links" href="search_tax.aspx" title="Back To Search Criteria">Back 
-										To Search Criteria </A>
-                                </td>
-                            </tr>
-                        </table>
+                <tr style="vertical-align: top;">
+			<td width="25%">
+                        <div class="subwrite">
+                            <span id="MasterContentPlaceHolder_ApprOwnersDetails_ResultsRepeater_OwnerAddressLabel_0">Mailing Address:</span>
+                        </div>
+                    </td>
+			<td>
+                        <div>
+                            <span id="MasterContentPlaceHolder_ApprOwnersDetails_ResultsRepeater_OwnerAddress_0">2270 9th Rd<br>Plainville, KS 67663</span>
+                        </div> 
+                    </td>
+		</tr>
+		
+            </tbody></table>
+        
+
+	</div></div> 
+<input type="hidden" name="ctl00$MasterContentPlaceHolder$ApprOwnersDetails$PanelTitle_CollapsiblePanelExtender_ClientState" id="MasterContentPlaceHolder_ApprOwnersDetails_PanelTitle_CollapsiblePanelExtender_ClientState" value="false">
+
+
+
+                     
+</div>
+                   <div class="clearer"></div>
+                        </td>
+                        <td width="50%">
+                            <div id="MasterContentPlaceHolder_pApprPropertyAddressDetails">
+	
+                    <div id="MasterContentPlaceHolder_ApprPropertyAddressDetails_TitlePanel">
+		
+    <div class="accordionHeader"> 
+        <div style="float: left;">Property Address</div>
+        <span id="MasterContentPlaceHolder_ApprPropertyAddressDetails_InformationHeader" style="margin-left:10px;"></span> 
+        <div style="float: right; vertical-align: middle;"> 
+            <img id="MasterContentPlaceHolder_ApprPropertyAddressDetails_PanelToggle" src="../App_Themes/default/images/collapse_blue.jpg" style="border-width:0px">
+        </div> 
+        <div class="clearer"></div>
+    </div> 
+
+	</div>
+<div id="" style="border: 0px; margin: 0px; padding: 0px; overflow-y: hidden; visibility: visible; height: 34px;" class=""><div id="MasterContentPlaceHolder_ApprPropertyAddressDetails_UpdatePanel" style="visibility: visible; height: auto;">
+		
+    
+            <table class="searchContent">
+                <tbody><tr valign="top">
+                    <td width="25%">
+                        <div class="subwrite">
+                            <span id="MasterContentPlaceHolder_ApprPropertyAddressDetails_ResultsRepeater_AddressNameLabel_0">Address:</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <span id="MasterContentPlaceHolder_ApprPropertyAddressDetails_ResultsRepeater_PropertyAddress_0">0 County Rd<br>Osborne, KS 67473</span>
+                        </div>
                     </td>
                 </tr>
-                <tr>
-                    <td vAlign="bottom">
-                        <table cellSpacing="0" cellPadding="0" width="100%" border="0">
-                            <tr>
-                                <td vAlign="bottom" height="1"></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <table width="100%" height="27" border="0" cellpadding="0" cellspacing="0" ID="Table1">
-                                        <tr>
-                                            <td height="5" colspan="2" background="../images/down.gif"></td>
-                                        </tr>
-                                        <tr>
-                                            <td width="43%" align="right" class="down_color">&nbsp;</td>
-                                        </tr>
-                                </td>
-                            </tr>
-                        </table>
+            </tbody></table>
+        
+
+	</div></div> 
+<input type="hidden" name="ctl00$MasterContentPlaceHolder$ApprPropertyAddressDetails$PanelTitle_CollapsiblePanelExtender_ClientState" id="MasterContentPlaceHolder_ApprPropertyAddressDetails_PanelTitle_CollapsiblePanelExtender_ClientState" value="false">
+
+                     
+</div>
+                   <div class="clearer"></div>
+                        </td>
+                    </tr>
+                </tbody></table>
+            </td>
+            <td style="width:25px">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width:25px">&nbsp;</td>
+            <td>
+                <table width="100%">
+                    <tbody><tr valign="top">
+                        <td width="50%">
+                            <div id="MasterContentPlaceHolder_pApprPropertyInfoDetails">
+	
+                    <div id="MasterContentPlaceHolder_ApprPropertyInfoDetails_TitlePanel">
+		
+    <div class="accordionHeader"> 
+        <div style="float: left;">General Property Information</div>
+        <span id="MasterContentPlaceHolder_ApprPropertyInfoDetails_InformationHeader" style="margin-left:10px;"></span> 
+        <div style="float: right; vertical-align: middle;"> 
+            <img id="MasterContentPlaceHolder_ApprPropertyInfoDetails_PanelToggle" src="../App_Themes/default/images/collapse_blue.jpg" style="border-width:0px">
+        </div> 
+        <div class="clearer"></div>
+    </div> 
+
+	</div>
+<div id="" style="border: 0px; margin: 0px; padding: 0px; overflow-y: hidden; visibility: visible; height: 117px;" class=""><div id="MasterContentPlaceHolder_ApprPropertyInfoDetails_UpdatePanel" style="visibility: visible; height: auto;">
+		
+    
+            <table class="searchContent">
+                <tbody><tr style="vertical-align: top;">
+                    <td width="25%" class="subwrite">
+                        <span id="MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_Label1_0">Property Class:</span>
+                    </td>
+                    <td>
+                        <span id="MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_PropertyInfoClass_0">Agricultural Use - A</span>
                     </td>
                 </tr>
-            </table>
-        </form>
-    </body>
-</HTML>
+                <tr style="vertical-align: top;">
+                    <td width="25%" class="subwrite">
+                        <span id="MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_Label2_0">Living Units:</span>
+                    </td>
+                    <td>
+                        <span id="MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_PropertyInfoLivingUnit_0"></span>
+                    </td>
+                </tr>
+                <tr style="vertical-align: top;">
+                    <td width="25%" class="subwrite">
+                        <span id="MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_Label4_0">Zoning:</span>
+                    </td>
+                    <td>
+                        <span id="MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_PropertyInfoZoning_0"></span>
+                    </td>
+                </tr>
+                <tr style="vertical-align: top;">
+                    <td width="25%" class="subwrite">
+                        <span id="MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_Label3_0">Neighborhood:</span>
+                    </td>
+                    <td>
+                        <span id="MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_PropertyInfoNeighborhood_0">400</span>
+                    </td>
+                </tr>
+                <tr style="vertical-align: top;">
+                    <td width="25%" class="subwrite">
+                        <span id="MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_Label5_0">Taxing Unit:</span>
+                    </td>
+                    <td>
+                        <span id="MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_PropertyInfoTaxUnit_0">180 NATOMA</span>
+                    </td>
+                </tr>
+            </tbody></table>
+        
+
+	</div></div> 
+<input type="hidden" name="ctl00$MasterContentPlaceHolder$ApprPropertyInfoDetails$PanelTitle_CollapsiblePanelExtender_ClientState" id="MasterContentPlaceHolder_ApprPropertyInfoDetails_PanelTitle_CollapsiblePanelExtender_ClientState" value="false">
+
+                    
+</div>
+                    <div class="clearer"></div>
+                        </td>
+                        <td width="50%">
+                            <div id="MasterContentPlaceHolder_pApprPropertyDeeds">
+	
+                    <div id="MasterContentPlaceHolder_ApprPropertyDeeds_TitlePanel">
+		
+    <div class="accordionHeader"> 
+        <div style="float: left;">Deed Information</div>
+        <span id="MasterContentPlaceHolder_ApprPropertyDeeds_InformationHeader" style="margin-left:10px;"></span> 
+        <div style="float: right; vertical-align: middle;"> 
+            <img id="MasterContentPlaceHolder_ApprPropertyDeeds_PanelToggle" src="../App_Themes/default/images/collapse_blue.jpg" style="border-width:0px">
+        </div> 
+        <div class="clearer"></div>
+    </div> 
+
+	</div>
+<div id="" style="border: 0px; margin: 0px; padding: 0px; overflow-y: hidden; visibility: visible; height: 90px;" class=""><div id="MasterContentPlaceHolder_ApprPropertyDeeds_UpdatePanel" style="visibility: visible; height: auto;">
+		
+    <table id="MasterContentPlaceHolder_ApprPropertyDeeds_ColumnHeader" class="searchContent" width="100%">
+			<tbody><tr valign="top" class="subwrite">
+				<td width="15%">
+                <span id="MasterContentPlaceHolder_ApprPropertyDeeds_Label1">Document #</span>
+            </td>
+				<td>
+                <span id="MasterContentPlaceHolder_ApprPropertyDeeds_Label2">Document Link</span>
+            </td>
+			</tr>
+		</tbody></table>
+		
+    
+            <table class="searchContent">
+                <tbody><tr valign="top">
+                    <td width="15%">
+                        <span id="MasterContentPlaceHolder_ApprPropertyDeeds_ResultsRepeater_DocumentId_0">M74-96</span>
+                    </td>
+                    <td>
+                        <a id="MasterContentPlaceHolder_ApprPropertyDeeds_ResultsRepeater_DocumentHyperLink_0" target="_blank"></a>
+                    </td>
+                </tr>
+            </tbody></table>
+        
+            <table class="searchContent">
+                <tbody><tr valign="top">
+                    <td width="15%">
+                        <span id="MasterContentPlaceHolder_ApprPropertyDeeds_ResultsRepeater_DocumentId_1">A101-59</span>
+                    </td>
+                    <td>
+                        <a id="MasterContentPlaceHolder_ApprPropertyDeeds_ResultsRepeater_DocumentHyperLink_1" target="_blank"></a>
+                    </td>
+                </tr>
+            </tbody></table>
+        
+
+	</div></div> 
+<input type="hidden" name="ctl00$MasterContentPlaceHolder$ApprPropertyDeeds$PanelTitle_CollapsiblePanelExtender_ClientState" id="MasterContentPlaceHolder_ApprPropertyDeeds_PanelTitle_CollapsiblePanelExtender_ClientState" value="false">
+
+                     
+</div>
+                   <div class="clearer"></div>
+                        </td>
+                    </tr>
+                </tbody></table>
+            </td>
+            <td style="width:25px">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width:25px">&nbsp;</td>
+            <td>
+                <div id="MasterContentPlaceHolder_pApprPropertyLegalDetails">
+	
+                    <div id="MasterContentPlaceHolder_ApprPropertyLegalDetails_TitlePanel">
+		
+    <div class="accordionHeader"> 
+        <div style="float: left;">Neighborhood / Tract Information</div>
+        <span id="MasterContentPlaceHolder_ApprPropertyLegalDetails_InformationHeader" style="margin-left:10px;"></span> 
+        <div style="float: right; vertical-align: middle;"> 
+            <img id="MasterContentPlaceHolder_ApprPropertyLegalDetails_PanelToggle" src="../App_Themes/default/images/collapse_blue.jpg" style="border-width:0px">
+        </div> 
+        <div class="clearer"></div>
+    </div> 
+
+	</div>
+<div id="" style="border: 0px; margin: 0px; padding: 0px; overflow-y: hidden; visibility: visible; height: 101px;" class=""><div id="MasterContentPlaceHolder_ApprPropertyLegalDetails_UpdatePanel" style="visibility: visible; height: auto;">
+		
+    
+            <table class="searchContent">
+                <tbody><tr valign="top">
+                    <td width="25%">
+                        <div class="subwrite">
+                            <span id="MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_SudbNameLabel_0">Neighborhood:</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <span id="MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_LegalSubd_0">400&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <td width="25%">
+                        <div class="subwrite">
+                            <span id="MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_Label1_0">Tract:</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <span id="MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_LegalTract_0">Section: 32&nbsp;&nbsp;&nbsp;&nbsp;Township: 10&nbsp;&nbsp;&nbsp;&nbsp;Range: 15W&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <td width="25%">
+                        <div class="subwrite">
+                            <span id="MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_Label2_0">Tract Description:</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <span id="MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_LegalDescription_0">S32, T10, R15W, ACRES 156.1, SW4 LESS R/W</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <td width="25%">
+                        <div class="subwrite">
+                            <span id="MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_lblAcres_0">Acres:</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <span id="MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_Acres_0">156.10</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <td width="25%">
+                        <div class="subwrite">
+                            <span id="MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_lblMarketAcres_0">Market Acres:</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <span id="MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_MarketAcres_0">0.00</span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody></table>
+        
+
+	</div></div> 
+<input type="hidden" name="ctl00$MasterContentPlaceHolder$ApprPropertyLegalDetails$PanelTitle_CollapsiblePanelExtender_ClientState" id="MasterContentPlaceHolder_ApprPropertyLegalDetails_PanelTitle_CollapsiblePanelExtender_ClientState" value="false">
+
+                
+</div>
+            <div class="clearer"></div>
+            </td>
+            <td style="width:25px">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width:25px">&nbsp;</td>
+            <td>
+                <div id="MasterContentPlaceHolder_pApprPropertyLbcsDetails">
+	
+                    <div id="MasterContentPlaceHolder_ApprPropertyLbcsDetails_TitlePanel">
+		
+    <div class="accordionHeader"> 
+        <div style="float: left;">Land Based Classification System</div>
+        <span id="MasterContentPlaceHolder_ApprPropertyLbcsDetails_InformationHeader" style="margin-left:10px;"></span> 
+        <div style="float: right; vertical-align: middle;"> 
+            <img id="MasterContentPlaceHolder_ApprPropertyLbcsDetails_PanelToggle" src="../App_Themes/default/images/collapse_blue.jpg" style="border-width:0px">
+        </div> 
+        <div class="clearer"></div>
+    </div> 
+
+	</div>
+<div id="" style="border: 0px; margin: 0px; padding: 0px; overflow-y: hidden; visibility: visible; height: 82px;" class=""><div id="MasterContentPlaceHolder_ApprPropertyLbcsDetails_UpdatePanel" style="visibility: visible; height: auto;">
+		
+    
+            <table class="searchContent">
+                <tbody><tr valign="top">
+                    <td width="25%">
+                        <div class="subwrite">
+                            <span id="MasterContentPlaceHolder_ApprPropertyLbcsDetails_ResultsRepeater_SudbNameLabel_0">Function:</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <span id="MasterContentPlaceHolder_ApprPropertyLbcsDetails_ResultsRepeater_LbcsFunction_0">Farming / ranch land (no improvements)</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <td width="25%">
+                        <div class="subwrite">
+                            <span id="MasterContentPlaceHolder_ApprPropertyLbcsDetails_ResultsRepeater_Label1_0">Activity:</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <span id="MasterContentPlaceHolder_ApprPropertyLbcsDetails_ResultsRepeater_LbcsActivity_0">Farming, plowing, tilling, harvesting, or related activities</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <td width="25%">
+                        <div class="subwrite">
+                            <span id="MasterContentPlaceHolder_ApprPropertyLbcsDetails_ResultsRepeater_Label2_0">Ownership:</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <span id="MasterContentPlaceHolder_ApprPropertyLbcsDetails_ResultsRepeater_LbcsOwnership_0">Private-fee simple</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <td width="25%">
+                        <div class="subwrite">
+                            <span id="MasterContentPlaceHolder_ApprPropertyLbcsDetails_ResultsRepeater_Label3_0">Site:</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <span id="MasterContentPlaceHolder_ApprPropertyLbcsDetails_ResultsRepeater_LbcsSite_0">Dev Site - crops, grazing etc - no structures</span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody></table>
+        
+
+	</div></div> 
+<input type="hidden" name="ctl00$MasterContentPlaceHolder$ApprPropertyLbcsDetails$PanelTitle_CollapsiblePanelExtender_ClientState" id="MasterContentPlaceHolder_ApprPropertyLbcsDetails_PanelTitle_CollapsiblePanelExtender_ClientState" value="false">
+
+                
+</div>
+            <div class="clearer"></div>
+            </td>
+            <td style="width:25px">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width:25px">&nbsp;</td>
+            <td>
+                <div id="MasterContentPlaceHolder_pApprPropertyFactorsDetails">
+	
+                    <div id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_TitlePanel">
+		
+    <div class="accordionHeader"> 
+        <div style="float: left;">Property Factors</div>
+        <span id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_InformationHeader" style="margin-left:10px;"></span> 
+        <div style="float: right; vertical-align: middle;"> 
+            <img id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_PanelToggle" src="../App_Themes/default/images/collapse_blue.jpg" style="border-width:0px">
+        </div> 
+        <div class="clearer"></div>
+    </div> 
+
+	</div>
+<div id="" style="border: 0px; margin: 0px; padding: 0px; overflow-y: hidden; visibility: visible; height: 101px;" class=""><div id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_UpdatePanel" style="visibility: visible; height: auto;">
+		
+    
+            <table class="searchContent">
+                <tbody><tr valign="top">
+                    <td width="25%">
+                        <div class="subwrite">
+                            <a href="~/../gradecodes.aspx" class="subwrite" target="0"><span id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_SudbNameLabel_0">Topography:</span></a>
+                        </div>
+                    </td>
+                    <td width="25%">
+                        <span id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorTopography_0">Rolling - 4</span>
+                    </td>
+                    <td width="25%">
+                        <div class="subwrite">
+                            <span id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_Label5_0">Parking Type:</span>
+                        </div>
+                    </td>
+                    <td width="25%">
+                        <span id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorParkType_0">None - 0</span>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <td width="25%">
+                        <div class="subwrite">
+                            <span id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_Label1_0">Utilities:</span>
+                        </div>
+                    </td>
+                    <td width="25%">
+                        <span id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorUtilities_0">None - 8</span>
+                    </td>
+                    <td width="25%">
+                        <div class="subwrite">
+                            <span id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_Label3_0">Parking Quantity:</span>
+                        </div>
+                    </td>
+                    <td width="25%">
+                        <span id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorParkQuantity_0">None - 0</span>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <td width="25%">
+                        <div class="subwrite">
+                            <span id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_Label2_0">Access:</span>
+                        </div>
+                    </td>
+                    <td width="25%">
+                        <span id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorAccess_0">Semi Improved Road - 2</span>
+                    </td>
+                    <td width="25%">
+                        <div class="subwrite">
+                            <span id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_Label6_0">Parking Proximity:</span>
+                        </div>
+                    </td>
+                    <td width="25%">
+                        <span id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorParkProximity_0">Far - 0</span>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <td width="25%">
+                        <div class="subwrite">
+                            <span id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_Label4_0">Fronting:</span>
+                        </div>
+                    </td>
+                    <td width="25%">
+                        <span id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorFronting_0">Residential Street - 4</span>
+                    </td>
+                    <td width="25%">
+                        <div class="subwrite">
+                            <span id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_Label8_0">Parking Covered:</span>
+                        </div>
+                    </td>
+                    <td width="25%">
+                        <span id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorParkCovered_0"></span>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <td width="25%">
+                        <div class="subwrite">
+                            <span id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_Label7_0">Location:</span>
+                        </div>
+                    </td>
+                    <td width="25%">
+                        <span id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorLocation_0">Neighborhood or Spot - 6</span>
+                    </td>
+                    <td width="25%">
+                        <div class="subwrite">
+                            <span id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_Label10_0">Parking Uncovered:</span>
+                        </div>
+                    </td>
+                    <td width="25%">
+                        <span id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorParkUncovered_0"></span>
+                    </td>
+                </tr>
+            </tbody></table>
+        
+
+	</div></div> 
+<input type="hidden" name="ctl00$MasterContentPlaceHolder$ApprPropertyFactorsDetails$PanelTitle_CollapsiblePanelExtender_ClientState" id="MasterContentPlaceHolder_ApprPropertyFactorsDetails_PanelTitle_CollapsiblePanelExtender_ClientState" value="false">
+
+                
+</div>
+            <div class="clearer"></div>
+            </td>
+            <td style="width:25px">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width:25px">&nbsp;</td>
+            <td>
+                
+            </td>
+            <td style="width:25px">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width:25px">&nbsp;</td>
+            <td>
+                <div id="MasterContentPlaceHolder_pApprPropertyValuesDetails">
+	
+                    
+<script type="text/javascript">
+
+    function ExpandCollapse() {
+        var collPanel = $find("PanelTitle_CollapsiblePanelExtender");
+        if (collPanel.get_Collapsed())
+            collPanel.set_Collapsed(false);
+        else
+            collPanel.set_Collapsed(true);
+    }
+
+    </script>
+<div id="MasterContentPlaceHolder_ApprPropertyValuesDetails_TitlePanel">
+		
+    <div class="accordionHeader"> 
+        <div style="float: left;">Appraised Values</div>
+        <span id="MasterContentPlaceHolder_ApprPropertyValuesDetails_InformationHeader" style="margin-left:10px;"></span> 
+        <div style="float: right; vertical-align: middle;"> 
+            <img id="MasterContentPlaceHolder_ApprPropertyValuesDetails_PanelToggle" src="../App_Themes/default/images/collapse_blue.jpg" style="border-width:0px">
+        </div> 
+        <div class="clearer"></div>
+    </div> 
+
+	</div>
+<div id="" style="border: 0px; margin: 0px; padding: 0px; overflow-y: hidden; visibility: visible; height: 48px;" class=""><div id="MasterContentPlaceHolder_ApprPropertyValuesDetails_UpdatePanel" style="visibility: visible; height: auto;">
+		
+    <table id="MasterContentPlaceHolder_ApprPropertyValuesDetails_ColumnHeader" class="searchContent" width="100%">
+			<tbody><tr valign="top" class="subwrite">
+				<td width="20%">
+                <span id="MasterContentPlaceHolder_ApprPropertyValuesDetails_Label5">Tax Year</span>
+            </td>
+				<td width="20%">
+                <span id="MasterContentPlaceHolder_ApprPropertyValuesDetails_Label1">Property Class</span>
+            </td>
+				<td width="20%" align="right">
+                <span id="MasterContentPlaceHolder_ApprPropertyValuesDetails_Label2">Land</span>
+            </td>
+				<td width="20%" align="right">
+                <span id="MasterContentPlaceHolder_ApprPropertyValuesDetails_Label3">Building</span>
+            </td>
+				<td width="20%" align="right">
+                <span id="MasterContentPlaceHolder_ApprPropertyValuesDetails_Label4">Total</span>
+            </td>
+			</tr>
+		</tbody></table>
+		
+    
+            <table class="searchContent">
+                <tbody><tr valign="top">
+                    <td width="20%">
+                        <span id="MasterContentPlaceHolder_ApprPropertyValuesDetails_ResultsRepeater_ValuesTaxYear_0">2024</span>
+                    </td>
+                    <td width="20%">
+                        <span id="MasterContentPlaceHolder_ApprPropertyValuesDetails_ResultsRepeater_ValuesClass_0">Agricultural Use - A</span>
+                    </td>
+                    <td width="20%" align="right">
+                        <span id="MasterContentPlaceHolder_ApprPropertyValuesDetails_ResultsRepeater_ValuesFinalLand_0">33,460</span>
+                    </td>
+                    <td width="20%" align="right">
+                        <span id="MasterContentPlaceHolder_ApprPropertyValuesDetails_ResultsRepeater_ValuesFinalBldg_0">00</span>
+                    </td>
+                    <td width="20%" align="right">
+                        <span id="MasterContentPlaceHolder_ApprPropertyValuesDetails_ResultsRepeater_ValuesFinalTotal_0">33,460</span>
+                    </td>
+                </tr>
+            </tbody></table>
+        
+
+	</div></div> 
+<!---->
+<input type="hidden" name="ctl00$MasterContentPlaceHolder$ApprPropertyValuesDetails$PanelTitle_CollapsiblePanelExtender_ClientState" id="MasterContentPlaceHolder_ApprPropertyValuesDetails_PanelTitle_CollapsiblePanelExtender_ClientState" value="false">
+
+            
+</div>
+            </td>
+            <td style="width:25px">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width:25px">&nbsp;</td>
+            <td>
+                <div id="MasterContentPlaceHolder_pApprPropertyMarketLandDetails">
+	
+                    <div id="MasterContentPlaceHolder_ApprPropertyMarketLandDetails_TitlePanel">
+		
+    <div class="accordionHeader"> 
+        <div style="float: left;">Market Land Information</div>
+        <span id="MasterContentPlaceHolder_ApprPropertyMarketLandDetails_InformationHeader" style="margin-left:10px;">[Information Not Available]</span> 
+        <div style="float: right; vertical-align: middle;"> 
+            <img id="MasterContentPlaceHolder_ApprPropertyMarketLandDetails_PanelToggle" src="../App_Themes/default/images/collapse_blue.jpg" style="border-width:0px">
+        </div> 
+        <div class="clearer"></div>
+    </div> 
+
+	</div>
+<div id="" style="border: 0px; margin: 0px; padding: 0px; overflow-y: hidden; visibility: visible; height: auto;" class=""><div id="MasterContentPlaceHolder_ApprPropertyMarketLandDetails_UpdatePanel" style="visibility: visible; height: auto;">
+		
+    
+    
+
+	</div></div> 
+<input type="hidden" name="ctl00$MasterContentPlaceHolder$ApprPropertyMarketLandDetails$PanelTitle_CollapsiblePanelExtender_ClientState" id="MasterContentPlaceHolder_ApprPropertyMarketLandDetails_PanelTitle_CollapsiblePanelExtender_ClientState" value="false">
+
+            
+</div>
+            </td>
+            <td style="width:25px">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width:25px">&nbsp;</td>
+            <td>
+                <div id="MasterContentPlaceHolder_pApprResidentialDetails">
+	
+                    
+    <script type="text/javascript"> 
+        function openwindow() {
+            window.open('','jav','width=400,height=300,resizable=yes');
+        }
+     </script><div id="MasterContentPlaceHolder_ApprResidentialDetails_TitlePanel">
+		
+    <div class="accordionHeader"> 
+        <div style="float: left;">Residential Information</div>
+        <span id="MasterContentPlaceHolder_ApprResidentialDetails_InformationHeader" style="margin-left:10px;">[Information Not Available]</span> 
+        <div style="float: right; vertical-align: middle;"> 
+            <img id="MasterContentPlaceHolder_ApprResidentialDetails_PanelToggle" src="../App_Themes/default/images/collapse_blue.jpg" style="border-width:0px">
+        </div> 
+        <div class="clearer"></div>
+    </div> 
+
+	</div>
+<div id="" class="" style="border: 0px; margin: 0px; padding: 0px; overflow-y: hidden; visibility: visible; height: auto;"><div id="MasterContentPlaceHolder_ApprResidentialDetails_UpdatePanel" class="collapsiblePanelContainer" style="visibility: visible; height: auto;">
+		
+    
+
+	</div></div> 
+<input type="hidden" name="ctl00$MasterContentPlaceHolder$ApprResidentialDetails$PanelTitle_CollapsiblePanelExtender_ClientState" id="MasterContentPlaceHolder_ApprResidentialDetails_PanelTitle_CollapsiblePanelExtender_ClientState" value="false">
+
+
+            
+</div>
+            </td>
+            <td style="width:25px">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width:25px">&nbsp;</td>
+            <td>
+                <div id="MasterContentPlaceHolder_pApprCommercialDetails">
+	
+                    <div id="MasterContentPlaceHolder_ApprCommercialDetails_TitlePanel">
+		
+    <div class="accordionHeader"> 
+        <div style="float: left;">Commercial Information</div>
+        <span id="MasterContentPlaceHolder_ApprCommercialDetails_InformationHeader" style="margin-left:10px;">[Information Not Available]</span> 
+        <div style="float: right; vertical-align: middle;"> 
+            <img id="MasterContentPlaceHolder_ApprCommercialDetails_PanelToggle" src="../App_Themes/default/images/collapse_blue.jpg" style="border-width:0px">
+        </div> 
+        <div class="clearer"></div>
+    </div> 
+
+	</div>
+<div id="" class="" style="border: 0px; margin: 0px; padding: 0px; overflow-y: hidden; visibility: visible; height: auto;"><div id="MasterContentPlaceHolder_ApprCommercialDetails_UpdatePanel" class="collapsiblePanelContainer" style="visibility: visible; height: auto;">
+		
+    
+
+	</div></div> 
+<input type="hidden" name="ctl00$MasterContentPlaceHolder$ApprCommercialDetails$PanelTitle_CollapsiblePanelExtender_ClientState" id="MasterContentPlaceHolder_ApprCommercialDetails_PanelTitle_CollapsiblePanelExtender_ClientState" value="false">
+<div class="clearer"></div>
+
+
+
+            
+</div>
+            </td>
+            <td style="width:25px">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width:25px">&nbsp;</td>
+            <td>
+                <div id="MasterContentPlaceHolder_pApprOtherImprovementDetails">
+	
+                    <div id="MasterContentPlaceHolder_ApprOtherImprovementDetails_TitlePanel">
+		
+    <div class="accordionHeader"> 
+        <div style="float: left;">Other Building Improvement Information</div>
+        <span id="MasterContentPlaceHolder_ApprOtherImprovementDetails_InformationHeader" style="margin-left:10px;">[Information Not Available]</span> 
+        <div style="float: right; vertical-align: middle;"> 
+            <img id="MasterContentPlaceHolder_ApprOtherImprovementDetails_PanelToggle" src="../App_Themes/default/images/collapse_blue.jpg" style="border-width:0px">
+        </div> 
+        <div class="clearer"></div>
+    </div> 
+
+	</div>
+<div id="" class="" style="border: 0px; margin: 0px; padding: 0px; overflow-y: hidden; visibility: visible; height: auto;"><div id="MasterContentPlaceHolder_ApprOtherImprovementDetails_UpdatePanel" class="collapsiblePanelContainer" style="visibility: visible; height: auto;">
+		
+        
+
+	</div></div> 
+<input type="hidden" name="ctl00$MasterContentPlaceHolder$ApprOtherImprovementDetails$PanelTitle_CollapsiblePanelExtender_ClientState" id="MasterContentPlaceHolder_ApprOtherImprovementDetails_PanelTitle_CollapsiblePanelExtender_ClientState" value="false">
+<div class="clearer"></div>
+
+
+            
+</div>
+            </td>
+            <td style="width:25px">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width:25px">&nbsp;</td>
+            <td>
+                <div id="MasterContentPlaceHolder_pApprAgriculturalDetails">
+	
+                    <div id="MasterContentPlaceHolder_ApprAgriculturalDetails_TitlePanel">
+		
+        <div class="accordionHeader"> 
+            <div style="float: left;">Agricultural Information</div>
+            <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_InformationHeader" style="margin-left:10px;"></span> 
+            <div style="float: right; vertical-align: middle;"> 
+                <img id="MasterContentPlaceHolder_ApprAgriculturalDetails_PanelToggle" src="../App_Themes/default/images/collapse_blue.jpg" style="border-width:0px">
+            </div> 
+            <div class="clearer"></div>
+        </div> 
+    
+	</div>
+    <div id="" style="border: 0px; margin: 0px; padding: 0px; overflow-y: hidden; visibility: visible; height: 649px;" class=""><div id="MasterContentPlaceHolder_ApprAgriculturalDetails_UpdatePanel" style="visibility: visible; height: auto;">
+		
+        <div id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgContent" class="searchContent">
+            
+                    <div class="subwrite">Agricultural Land</div>
+                    <div class="clearer"></div>
+                
+                    <table width="100%">
+                        <tbody><tr valign="top">
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Land Type:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgType_0">Dry Land - DR</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acres:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgAcres_0">2.09</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Soil Unit:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_SoilType_0">2614</span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Irrig. Type:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_IrrigType_0"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Well Depth:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_WellDepth_0"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acre Feet:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AcreFeet_0"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acre Feet/Ac:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AcreFtPerAcre_0"></span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Adjust Code:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdjustCode_0"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Govt. Prgm:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_GovtProgCode_0"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Base Rate:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_BaseRate_0">262</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Adjust Rate:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdjRate_0">262</span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Use Value:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdUseValue_0">550</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Market Value:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgMktValue_0">5,360</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody></table>
+                
+                    <table width="100%">
+                        <tbody><tr valign="top">
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Land Type:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgType_1">Dry Land - DR</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acres:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgAcres_1">3.57</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Soil Unit:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_SoilType_1">2612</span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Irrig. Type:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_IrrigType_1"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Well Depth:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_WellDepth_1"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acre Feet:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AcreFeet_1"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acre Feet/Ac:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AcreFtPerAcre_1"></span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Adjust Code:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdjustCode_1"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Govt. Prgm:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_GovtProgCode_1"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Base Rate:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_BaseRate_1">311</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Adjust Rate:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdjRate_1">311</span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Use Value:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdUseValue_1">1,110</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Market Value:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgMktValue_1">10,820</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody></table>
+                
+                    <table width="100%">
+                        <tbody><tr valign="top">
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Land Type:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgType_2">Dry Land - DR</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acres:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgAcres_2">42.38</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Soil Unit:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_SoilType_2">2625</span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Irrig. Type:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_IrrigType_2"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Well Depth:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_WellDepth_2"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acre Feet:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AcreFeet_2"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acre Feet/Ac:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AcreFtPerAcre_2"></span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Adjust Code:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdjustCode_2"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Govt. Prgm:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_GovtProgCode_2"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Base Rate:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_BaseRate_2">278</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Adjust Rate:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdjRate_2">278</span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Use Value:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdUseValue_2">11,780</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Market Value:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgMktValue_2">115,270</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody></table>
+                
+                    <table width="100%">
+                        <tbody><tr valign="top">
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Land Type:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgType_3">Dry Land - DR</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acres:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgAcres_3">55.47</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Soil Unit:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_SoilType_3">2613</span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Irrig. Type:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_IrrigType_3"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Well Depth:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_WellDepth_3"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acre Feet:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AcreFeet_3"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acre Feet/Ac:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AcreFtPerAcre_3"></span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Adjust Code:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdjustCode_3"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Govt. Prgm:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_GovtProgCode_3"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Base Rate:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_BaseRate_3">295</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Adjust Rate:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdjRate_3">295</span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Use Value:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdUseValue_3">16,360</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Market Value:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgMktValue_3">159,530</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody></table>
+                
+                    <table width="100%">
+                        <tbody><tr valign="top">
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Land Type:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgType_4">Native Grass - NG</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acres:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgAcres_4">2.50</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Soil Unit:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_SoilType_4">2660</span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Irrig. Type:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_IrrigType_4"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Well Depth:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_WellDepth_4"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acre Feet:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AcreFeet_4"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acre Feet/Ac:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AcreFtPerAcre_4"></span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Adjust Code:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdjustCode_4"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Govt. Prgm:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_GovtProgCode_4"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Base Rate:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_BaseRate_4">40</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Adjust Rate:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdjRate_4">40</span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Use Value:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdUseValue_4">100</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Market Value:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgMktValue_4">2,250</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody></table>
+                
+                    <table width="100%">
+                        <tbody><tr valign="top">
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Land Type:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgType_5">Native Grass - NG</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acres:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgAcres_5">11.94</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Soil Unit:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_SoilType_5">2613</span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Irrig. Type:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_IrrigType_5"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Well Depth:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_WellDepth_5"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acre Feet:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AcreFeet_5"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acre Feet/Ac:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AcreFtPerAcre_5"></span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Adjust Code:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdjustCode_5"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Govt. Prgm:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_GovtProgCode_5"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Base Rate:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_BaseRate_5">71</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Adjust Rate:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdjRate_5">71</span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Use Value:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdUseValue_5">850</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Market Value:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgMktValue_5">17,720</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody></table>
+                
+                    <table width="100%">
+                        <tbody><tr valign="top">
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Land Type:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgType_6">Native Grass - NG</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acres:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgAcres_6">37.96</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Soil Unit:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_SoilType_6">2625</span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Irrig. Type:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_IrrigType_6"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Well Depth:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_WellDepth_6"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acre Feet:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AcreFeet_6"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acre Feet/Ac:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AcreFtPerAcre_6"></span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Adjust Code:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdjustCode_6"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Govt. Prgm:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_GovtProgCode_6"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Base Rate:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_BaseRate_6">71</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Adjust Rate:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdjRate_6">71</span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Use Value:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdUseValue_6">2,700</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Market Value:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgMktValue_6">56,330</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody></table>
+                
+                    <table width="100%">
+                        <tbody><tr valign="top">
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Land Type:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgType_7">Native Grass - NG</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acres:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgAcres_7">0.19</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Soil Unit:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_SoilType_7">2614</span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Irrig. Type:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_IrrigType_7"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Well Depth:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_WellDepth_7"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acre Feet:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AcreFeet_7"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Acre Feet/Ac:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AcreFtPerAcre_7"></span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Adjust Code:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdjustCode_7"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Govt. Prgm:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_GovtProgCode_7"></span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Base Rate:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_BaseRate_7">71</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Adjust Rate:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdjRate_7">71</span>
+                                </div>
+                                <div class="clearer"></div>
+                            </td>
+                            <td width="25%" class="tabContent">
+                                <div class="divSearchColNarrow">Use Value:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AdUseValue_7">10</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColNarrow">Market Value:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgLandResultsRepeater_AgMktValue_7">280</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody></table>
+                
+
+            <div class="subwrite">Agricultural Land Summary</div>
+            <div class="clearer"></div>
+            <table width="100%">
+                <tbody><tr valign="top">
+                    <td width="50%">
+                        
+                                <div class="divSearchColLong">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgSummaryResultsRepeater_AgType_0">Dry Land - DR Acres: </span>
+                                </div> 
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgSummaryResultsRepeater_AgTotal_0">103.51</span>
+                                </div>
+                                <div class="clearer"></div>
+                            
+                                <div class="divSearchColLong">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgSummaryResultsRepeater_AgType_1">Native Grass - NG Acres: </span>
+                                </div> 
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgSummaryResultsRepeater_AgTotal_1">52.59</span>
+                                </div>
+                                <div class="clearer"></div>
+                            
+                    </td>
+                    <td width="50%">
+                        
+                                <div class="divSearchColLong">Total Land Acres:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgTotalResultsRepeater_AgTotal_0">156.10</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColLong">Total Land Use Value:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgTotalResultsRepeater_AgUseTotal_0">33,460</span>
+                                </div>
+                                <div class="clearer"></div>
+                                <div class="divSearchColLong">Total Land Mkt Value:</div>
+                                <div class="divColLast">
+                                    <span id="MasterContentPlaceHolder_ApprAgriculturalDetails_AgTotalResultsRepeater_AgMktTotal_0">367,560</span>
+                                </div>
+                                <div class="clearer"></div>
+                            
+                    </td>
+                </tr>
+            </tbody></table>
+            <br>
+            <div class="clearer"></div>
+        </div>
+    </div></div>
+
+	</div> 
+<input type="hidden" name="ctl00$MasterContentPlaceHolder$ApprAgriculturalDetails$PanelTitle_CollapsiblePanelExtender_ClientState" id="MasterContentPlaceHolder_ApprAgriculturalDetails_PanelTitle_CollapsiblePanelExtender_ClientState" value="false">
+
+            
+
+            </td>
+            <td style="width:25px">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width:25px">&nbsp;</td>
+            <td>
+                <div class="tabContent" style="margin:5px; vertical-align: middle;">
+                    &nbsp;
+                    &nbsp;&nbsp;
+                    <span id="MasterContentPlaceHolder_PageLabel">Page 1 of 1</span>&nbsp;&nbsp;
+                    &nbsp;
+                    
+                &nbsp;&nbsp;&nbsp;
+                </div>
+            </td>
+            <td style="width:25px">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width:25px">&nbsp;</td>
+            <td>
+                <span id="MasterContentPlaceHolder_lblLastUpdated" class="bottom">This parcel record was last updated on 1/31/2025 at 6 am. </span>
+            </td>
+            <td style="width:25px">&nbsp;</td>
+        </tr>
+    </tbody></table>
