@@ -1,61 +1,76 @@
-private void getRealEstateInformation(String responseBody) {
-    requestConf.debug("getRealEstateInformation() From here");
-    try {
-        Document document = Jsoup.parse(responseBody);
-        Elements receptdata = document.select("table[border=0][cellpadding=0][cellspacing=0][style*=width:100%] tbody");
-
-        // List of element IDs to extract
-        String[] elementIds = {
-            "MasterContentPlaceHolder_ApprOwnersDetails_ResultsRepeater_OwnerName_0",
-            "MasterContentPlaceHolder_ApprOwnersDetails_ResultsRepeater_OwnerAddress_0",
-            "MasterContentPlaceHolder_ApprPropertyAddressDetails_ResultsRepeater_PropertyAddress_0",
-            "MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_PropertyInfoClass_0",
-            "MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_PropertyInfoLivingUnit_0",
-            "MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_PropertyInfoZoning_0",
-            "MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_PropertyInfoNeighborhood_0",
-            "MasterContentPlaceHolder_ApprPropertyDeeds_ResultsRepeater_DocumentId_0",
-            "MasterContentPlaceHolder_ApprPropertyDeeds_ResultsRepeater_DocumentId_1",
-            "MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_LegalTract_0",
-            "MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_LegalDescription_0",
-            "MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_Acres_0",
-            "MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_MarketAcres_0",
-            "MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_PropertyInfoTaxUnit_0",
-            "MasterContentPlaceHolder_ApprPropertyLbcsDetails_ResultsRepeater_LbcsFunction_0",
-            "MasterContentPlaceHolder_ApprPropertyLbcsDetails_ResultsRepeater_LbcsActivity_0",
-            "MasterContentPlaceHolder_ApprPropertyLbcsDetails_ResultsRepeater_LbcsOwnership_0",
-            "MasterContentPlaceHolder_ApprPropertyLbcsDetails_ResultsRepeater_LbcsSite_0",
-            "MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorTopography_0",
-            "MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorUtilities_0",
-            "MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorAccess_0",
-            "MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorFronting_0",
-            "MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorLocation_0",
-            "MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorParkType_0",
-            "MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorParkQuantity_0",
-            "MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorParkProximity_0",
-            "MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorParkCovered_0",
-            "MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorParkUncovered_0",
-            "MasterContentPlaceHolder_ApprPropertyValuesDetails_ResultsRepeater_ValuesTaxYear_0",
-            "MasterContentPlaceHolder_ApprPropertyValuesDetails_ResultsRepeater_ValuesFinalLand_0",
-            "MasterContentPlaceHolder_ApprPropertyValuesDetails_ResultsRepeater_ValuesFinalBldg_0",
-            "MasterContentPlaceHolder_ApprPropertyValuesDetails_ResultsRepeater_ValuesFinalTotal_0"
-        };
-
-        // Array to store the extracted values
-        String[] values = new String[elementIds.length];
-
-        // Extract values from the HTML elements
-        for (int i = 0; i < elementIds.length; i++) {
-            values[i] = receptdata.select("span#" + elementIds[i]).html();
-            if (values[i] != null) {
-                values[i] = values[i].replace("<br>", ", ").replace("&nbsp;", " ");
-            }
-        }
-
-        // Create the RealEstateInformationResource object
-        RealEstateInformationResource realEstateInfo = new RealEstateInformationResource();
-        realEstateInfo.getRealEstateInformationObject(values);
-
-    } catch (Exception e) {
-        // Handle exception
-    }
-}
+public RealEstateInformation getRealEstateInformationObject(String ownerName,String mailingAddress, String address, String propertyClass, String livingUnits, String zoning, String neighborhood, String document1, String document2, String tract, String tractDescription, String acres, String marketAcres, String taxUnit, String function, String activity, String ownership, String site, String topography, String utilities, String access, String fronting, String location, String parkingType, String parkingQuantity, String parkingProximity, String parkingCovered, String parkingUncovered, String taxYear, String land, String building, String total)
+	{
+		RealEstateInformation realEstateInformation = new RealEstateInformation();
+		OwnerInformation ownerInformation = new OwnerInformation();
+		ownerInformation.setOwnerName(ownerName);
+		ownerInformation.setMailingAddress(mailingAddress);
+		
+		PropertyAddress propertyAddress = new PropertyAddress();
+		propertyAddress.setAddress(address);
+		
+		GeneralPropertyInformation genralPropertyInformation = new GeneralPropertyInformation();
+		genralPropertyInformation.setPropertyClass(propertyClass);
+		genralPropertyInformation.setLivingUnits(livingUnits);
+		genralPropertyInformation.setZoning(zoning);
+		genralPropertyInformation.setNeighborhood(neighborhood);
+		genralPropertyInformation.setTaxUnit(taxUnit);
+		
+		DeedInformation deedInformation =new DeedInformation();
+		deedInformation.setDocument1(document1);
+		deedInformation.setDocument2(document2);
+		
+		
+		TractInformation tractInformation = new TractInformation();
+		tractInformation.setNeighborhood(neighborhood);
+		tractInformation.setTract(tract);
+		tractInformation.setAcres(acres);
+		tractInformation.setMarketAcres(marketAcres);
+		
+		LanBasedClassificationSystem lanBasedClassificationSystem = new LanBasedClassificationSystem();
+		lanBasedClassificationSystem.setFunction(function);
+		lanBasedClassificationSystem.setActivity(activity);
+		lanBasedClassificationSystem.setOwnerShip(ownership);
+		lanBasedClassificationSystem.setSite(site);
+		
+		PropertyFactors propertyFactors = new PropertyFactors();
+		propertyFactors.setTopography(topography);
+		propertyFactors.setUtilities(utilities);
+		propertyFactors.setAccess(access);
+		propertyFactors.setFronting(fronting);
+		propertyFactors.setLocation(location);
+		propertyFactors.setParkingTypes(parkingType);
+		propertyFactors.setParkingQuantity(parkingQuantity);
+		propertyFactors.setParkingproximity(parkingProximity);
+		propertyFactors.setParkingcovered(parkingCovered);
+		propertyFactors.setParkingUncovered(parkingUncovered);
+		
+		AppraisedValues appraisedValues = new AppraisedValues();
+		appraisedValues.setTaxYear(taxYear);
+		appraisedValues.setPropertyClass(propertyClass);
+		appraisedValues.setLand(land);
+		appraisedValues.setBuilding(building);
+		appraisedValues.setTotal(total);
+				
+		
+		
+		
+		realEstateInformation.setOwnerInformation(ownerInformation);
+		realEstateInformation.setPropertyAddress(propertyAddress);
+		realEstateInformation.setGenralPropertyInformation(genralPropertyInformation);
+		realEstateInformation.setDeedInformation(deedInformation);
+		realEstateInformation.setTractInformation(tractInformation);
+		realEstateInformation.setLandBasedClassificationSystem(lanBasedClassificationSystem);
+		realEstateInformation.setPropertyFactors(propertyFactors);
+		realEstateInformation.setAppraisedValues(appraisedValues);
+		
+		
+		System.out.println("RealEstateInfo:"+realEstateInformation.getOwnerInformation());
+		System.out.println(realEstateInformation.getPropertyAddress());
+		System.out.println(realEstateInformation.getGeneralPropertyInformation());
+		System.out.println(realEstateInformation.getDeedInformation());
+		System.out.println(realEstateInformation.getTractInformation());
+		System.out.println(	realEstateInformation.getLandBasedClassificationSystem());
+		System.out.println(realEstateInformation.getPropertyFactors());
+		System.out.println(realEstateInformation.getAppraisedValues());
+		return realEstateInformation; 
+	}
