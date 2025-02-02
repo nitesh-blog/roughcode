@@ -1,55 +1,99 @@
 public RealEstateInformation getRealEstateInformationObject(String[] values) {
     RealEstateInformation realEstateInformation = new RealEstateInformation();
 
+    // Assign values from the array to variables for clarity
+    String ownerName = values[0];
+    String mailingAddress = values[1];
+    String address = values[2];
+    String propertyClass = values[3];
+    String livingUnits = values[4];
+    String zoning = values[5];
+    String neighborhood = values[6];
+    String document1 = values[7];
+    String document2 = values[8];
+    String tract = values[9];
+    String tractDescription = values[10];
+    String acres = values[11];
+    String marketAcres = values[12];
+    String taxUnit = values[13];
+    String function = values[14];
+    String activity = values[15];
+    String ownership = values[16];
+    String site = values[17];
+    String topography = values[18];
+    String utilities = values[19];
+    String access = values[20];
+    String fronting = values[21];
+    String location = values[22];
+    String parkingType = values[23];
+    String parkingQuantity = values[24];
+    String parkingProximity = values[25];
+    String parkingCovered = values[26];
+    String parkingUncovered = values[27];
+    String taxYear = values[28];
+    String land = values[29];
+    String building = values[30];
+    String total = values[31];
+
     // Set values in the respective objects
-    realEstateInformation.setOwnerInformation(new OwnerInformation()
-        .setOwnerName(values[0])
-        .setMailingAddress(values[1]));
+    OwnerInformation ownerInformation = new OwnerInformation();
+    ownerInformation.setOwnerName(ownerName);
+    ownerInformation.setMailingAddress(mailingAddress);
 
-    realEstateInformation.setPropertyAddress(new PropertyAddress()
-        .setAddress(values[2]));
+    PropertyAddress propertyAddress = new PropertyAddress();
+    propertyAddress.setAddress(address);
 
-    realEstateInformation.setGenralPropertyInformation(new GeneralPropertyInformation()
-        .setPropertyClass(values[3])
-        .setLivingUnits(values[4])
-        .setZoning(values[5])
-        .setNeighborhood(values[6])
-        .setTaxUnit(values[13]));
+    GeneralPropertyInformation genralPropertyInformation = new GeneralPropertyInformation();
+    genralPropertyInformation.setPropertyClass(propertyClass);
+    genralPropertyInformation.setLivingUnits(livingUnits);
+    genralPropertyInformation.setZoning(zoning);
+    genralPropertyInformation.setNeighborhood(neighborhood);
+    genralPropertyInformation.setTaxUnit(taxUnit);
 
-    realEstateInformation.setDeedInformation(new DeedInformation()
-        .setDocument1(values[7])
-        .setDocument2(values[8]));
+    DeedInformation deedInformation = new DeedInformation();
+    deedInformation.setDocument1(document1);
+    deedInformation.setDocument2(document2);
 
-    realEstateInformation.setTractInformation(new TractInformation()
-        .setNeighborhood(values[6])
-        .setTract(values[9])
-        .setAcres(values[11])
-        .setMarketAcres(values[12]));
+    TractInformation tractInformation = new TractInformation();
+    tractInformation.setNeighborhood(neighborhood);
+    tractInformation.setTract(tract);
+    tractInformation.setAcres(acres);
+    tractInformation.setMarketAcres(marketAcres);
 
-    realEstateInformation.setLandBasedClassificationSystem(new LanBasedClassificationSystem()
-        .setFunction(values[14])
-        .setActivity(values[15])
-        .setOwnerShip(values[16])
-        .setSite(values[17]));
+    LanBasedClassificationSystem lanBasedClassificationSystem = new LanBasedClassificationSystem();
+    lanBasedClassificationSystem.setFunction(function);
+    lanBasedClassificationSystem.setActivity(activity);
+    lanBasedClassificationSystem.setOwnerShip(ownership);
+    lanBasedClassificationSystem.setSite(site);
 
-    realEstateInformation.setPropertyFactors(new PropertyFactors()
-        .setTopography(values[18])
-        .setUtilities(values[19])
-        .setAccess(values[20])
-        .setFronting(values[21])
-        .setLocation(values[22])
-        .setParkingTypes(values[23])
-        .setParkingQuantity(values[24])
-        .setParkingproximity(values[25])
-        .setParkingcovered(values[26])
-        .setParkingUncovered(values[27]));
+    PropertyFactors propertyFactors = new PropertyFactors();
+    propertyFactors.setTopography(topography);
+    propertyFactors.setUtilities(utilities);
+    propertyFactors.setAccess(access);
+    propertyFactors.setFronting(fronting);
+    propertyFactors.setLocation(location);
+    propertyFactors.setParkingTypes(parkingType);
+    propertyFactors.setParkingQuantity(parkingQuantity);
+    propertyFactors.setParkingproximity(parkingProximity);
+    propertyFactors.setParkingcovered(parkingCovered);
+    propertyFactors.setParkingUncovered(parkingUncovered);
 
-    realEstateInformation.setAppraisedValues(new AppraisedValues()
-        .setTaxYear(values[28])
-        .setPropertyClass(values[3])
-        .setLand(values[29])
-        .setBuilding(values[30])
-        .setTotal(values[31]));
+    AppraisedValues appraisedValues = new AppraisedValues();
+    appraisedValues.setTaxYear(taxYear);
+    appraisedValues.setPropertyClass(propertyClass);
+    appraisedValues.setLand(land);
+    appraisedValues.setBuilding(building);
+    appraisedValues.setTotal(total);
+
+    // Set all objects in the RealEstateInformation object
+    realEstateInformation.setOwnerInformation(ownerInformation);
+    realEstateInformation.setPropertyAddress(propertyAddress);
+    realEstateInformation.setGenralPropertyInformation(genralPropertyInformation);
+    realEstateInformation.setDeedInformation(deedInformation);
+    realEstateInformation.setTractInformation(tractInformation);
+    realEstateInformation.setLandBasedClassificationSystem(lanBasedClassificationSystem);
+    realEstateInformation.setPropertyFactors(propertyFactors);
+    realEstateInformation.setAppraisedValues(appraisedValues);
 
     // Print the RealEstateInformation object for debugging
     System.out.println("RealEstateInfo: " + realEstateInformation.getOwnerInformation());
