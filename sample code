@@ -1,58 +1,61 @@
 private void getRealEstateInformation(String responseBody) {
-		requestConf.debug("getRealEstateInfprmatio() From here");
-		try {
-			Document document = Jsoup.parse(responseBody);
+    requestConf.debug("getRealEstateInformation() From here");
+    try {
+        Document document = Jsoup.parse(responseBody);
+        Elements receptdata = document.select("table[border=0][cellpadding=0][cellspacing=0][style*=width:100%] tbody");
 
-			Elements receptdata = document
-					.select("table[border=0][cellpadding=0][cellspacing=0][style*=width:100%] tbody");
-			
-		String ownerAddress =null,mailingAddress=null,address = null,propertyClass = null,livingUnits=null,zoning=null,
-				neighborhood=null,document1=null,document2=null,tract=null,tractDescription=null,acres=null,marketAcres=null,
-				taxUnit=null,function=null,activity=null,ownership=null,site=null,topography=null,utilities=null,access=null,fronting=null,
-				location=null,parkingType=null,parkingQuantity=null,parkingProximity=null,parkingCovered=null,parkingUncovered=null,taxYear=null,land=null,building=null,total=null;
-		
-		 ownerAddress=receptdata.select("span#MasterContentPlaceHolder_ApprOwnersDetails_ResultsRepeater_OwnerName_0").html();
-		 mailingAddress=receptdata.select("span#MasterContentPlaceHolder_ApprOwnersDetails_ResultsRepeater_OwnerAddress_0").html();
-		mailingAddress = mailingAddress.replace("<br>", ", ");
-		address=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyAddressDetails_ResultsRepeater_PropertyAddress_0").html();
-		propertyClass=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_PropertyInfoClass_0").html();
-		livingUnits=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_PropertyInfoLivingUnit_0").html();
-		zoning=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_PropertyInfoZoning_0").html();
-		neighborhood=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_PropertyInfoNeighborhood_0").html();
-		document1=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyDeeds_ResultsRepeater_DocumentId_0").html();
-		document2=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyDeeds_ResultsRepeater_DocumentId_1").html();
-		tract=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_LegalTract_0").html();
-		tract=tract.replace("&nbsp;", " ");
-		tractDescription=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_LegalDescription_0").html();
-		acres=receptdata.select("MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_Acres_0").html();
-		marketAcres=receptdata.select("MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_MarketAcres_0").html();
-		taxUnit=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_PropertyInfoTaxUnit_0").html();
-		function=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyLbcsDetails_ResultsRepeater_LbcsFunction_0").html();
-		activity=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyLbcsDetails_ResultsRepeater_LbcsActivity_0").html();
-		ownership=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyLbcsDetails_ResultsRepeater_LbcsOwnership_0").html();
-		site=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyLbcsDetails_ResultsRepeater_LbcsSite_0").html();
-		topography=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorTopography_0").html();
-		utilities=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorUtilities_0").html();
-		access=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorAccess_0").html();
-		fronting=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorFronting_0").html();
-		location=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorLocation_0").html();
-		parkingType=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorParkType_0").html();
-		parkingQuantity=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorParkQuantity_0").html();
-		parkingProximity=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorParkProximity_0").html();
-		parkingCovered=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorParkCovered_0").html();
-		parkingUncovered=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorParkUncovered_0").html();
-		taxYear=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyValuesDetails_ResultsRepeater_ValuesTaxYear_0").html();
-		land=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyValuesDetails_ResultsRepeater_ValuesFinalLand_0").html();
-		building=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyValuesDetails_ResultsRepeater_ValuesFinalBldg_0").html();
-		total=receptdata.select("span#MasterContentPlaceHolder_ApprPropertyValuesDetails_ResultsRepeater_ValuesFinalTotal_0").html();
-		
-		RealEstateInformationResource realEstateInfo = new RealEstateInformationResource();
-		realEstateInfo.getRealEstateInformationObject(ownerAddress,mailingAddress,address,propertyClass,livingUnits,zoning,neighborhood,document1,document2,tract,tractDescription,acres,marketAcres,
-		taxUnit,function,activity,ownership,site,topography,utilities,access,fronting,location,
-		parkingType,parkingQuantity,parkingProximity,parkingCovered,parkingUncovered,taxYear,land,building,total);
-		
+        // List of element IDs to extract
+        String[] elementIds = {
+            "MasterContentPlaceHolder_ApprOwnersDetails_ResultsRepeater_OwnerName_0",
+            "MasterContentPlaceHolder_ApprOwnersDetails_ResultsRepeater_OwnerAddress_0",
+            "MasterContentPlaceHolder_ApprPropertyAddressDetails_ResultsRepeater_PropertyAddress_0",
+            "MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_PropertyInfoClass_0",
+            "MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_PropertyInfoLivingUnit_0",
+            "MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_PropertyInfoZoning_0",
+            "MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_PropertyInfoNeighborhood_0",
+            "MasterContentPlaceHolder_ApprPropertyDeeds_ResultsRepeater_DocumentId_0",
+            "MasterContentPlaceHolder_ApprPropertyDeeds_ResultsRepeater_DocumentId_1",
+            "MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_LegalTract_0",
+            "MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_LegalDescription_0",
+            "MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_Acres_0",
+            "MasterContentPlaceHolder_ApprPropertyLegalDetails_ResultsRepeater_MarketAcres_0",
+            "MasterContentPlaceHolder_ApprPropertyInfoDetails_ResultsRepeater_PropertyInfoTaxUnit_0",
+            "MasterContentPlaceHolder_ApprPropertyLbcsDetails_ResultsRepeater_LbcsFunction_0",
+            "MasterContentPlaceHolder_ApprPropertyLbcsDetails_ResultsRepeater_LbcsActivity_0",
+            "MasterContentPlaceHolder_ApprPropertyLbcsDetails_ResultsRepeater_LbcsOwnership_0",
+            "MasterContentPlaceHolder_ApprPropertyLbcsDetails_ResultsRepeater_LbcsSite_0",
+            "MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorTopography_0",
+            "MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorUtilities_0",
+            "MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorAccess_0",
+            "MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorFronting_0",
+            "MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorLocation_0",
+            "MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorParkType_0",
+            "MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorParkQuantity_0",
+            "MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorParkProximity_0",
+            "MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorParkCovered_0",
+            "MasterContentPlaceHolder_ApprPropertyFactorsDetails_ResultsRepeater_FactorParkUncovered_0",
+            "MasterContentPlaceHolder_ApprPropertyValuesDetails_ResultsRepeater_ValuesTaxYear_0",
+            "MasterContentPlaceHolder_ApprPropertyValuesDetails_ResultsRepeater_ValuesFinalLand_0",
+            "MasterContentPlaceHolder_ApprPropertyValuesDetails_ResultsRepeater_ValuesFinalBldg_0",
+            "MasterContentPlaceHolder_ApprPropertyValuesDetails_ResultsRepeater_ValuesFinalTotal_0"
+        };
 
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-	}
+        // Array to store the extracted values
+        String[] values = new String[elementIds.length];
+
+        // Extract values from the HTML elements
+        for (int i = 0; i < elementIds.length; i++) {
+            values[i] = receptdata.select("span#" + elementIds[i]).html();
+            if (values[i] != null) {
+                values[i] = values[i].replace("<br>", ", ").replace("&nbsp;", " ");
+            }
+        }
+
+        // Create the RealEstateInformationResource object
+        RealEstateInformationResource realEstateInfo = new RealEstateInformationResource();
+        realEstateInfo.getRealEstateInformationObject(values);
+
+    } catch (Exception e) {
+        // Handle exception
+    }
+}
