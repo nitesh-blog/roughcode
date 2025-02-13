@@ -1,109 +1,177 @@
-public RealEstateInformation getRealEstateInformationObject(String[] values) {
-    RealEstateInformation realEstateInformation = new RealEstateInformation();
+private void getPriorYearTaxInstallments(String responseBody) {
+		requestConf.debug("Entered into getDelinquentYearTaxInstallmentList");
+		try {
+			Document document = Jsoup.parse(responsebodyredem);
+			int count=0;
+			requestConf.debug("resp redm doc = = " + document);
+			Element table = document.getElementById("ctl00_MainContent_gvSearch");
 
-    // Assign values from the array to variables for clarity
-    String ownerName = values[0];
-    String mailingAddress = values[1];
-    String address = values[2];
-    String propertyClass = values[3];
-    String livingUnits = values[4];
-    String zoning = values[5];
-    String neighborhood = values[6];
-    String document1 = values[7];
-    String document2 = values[8];
-    String tract = values[9];
-    String tractDescription = values[10];
-    String acres = values[11];
-    String marketAcres = values[12];
-    String taxUnit = values[13];
-    String function = values[14];
-    String activity = values[15];
-    String ownership = values[16];
-    String site = values[17];
-    String topography = values[18];
-    String utilities = values[19];
-    String access = values[20];
-    String fronting = values[21];
-    String location = values[22];
-    String parkingType = values[23];
-    String parkingQuantity = values[24];
-    String parkingProximity = values[25];
-    String parkingCovered = values[26];
-    String parkingUncovered = values[27];
-    String taxYear = values[28];
-    String land = values[29];
-    String building = values[30];
-    String total = values[31];
+			if (table != null) {
+				Elements trs = table.select("tbody tr");
+				if (trs.size() > 1) {
+					for (int i = trs.size() - 1; i >= 1; i--) {
+						String response = "";
+						String year = trs.get(i).select("td").first().text().replaceAll("\\D+", "").trim();
+						String amount = trs.get(i).select("td").get(8).text().trim();
+						
+						if (ScraperUtils.getDoubleValue(year) < ScraperUtils.getDoubleValue(taxYear)) {
 
-    // Set values in the respective objects
-    OwnerInformation ownerInformation = new OwnerInformation();
-    ownerInformation.setOwnerName(ownerName);
-    ownerInformation.setMailingAddress(mailingAddress);
+							String href = trs.get(i).select("td").get(9).select("a").attr("href").trim();
+							if (href != null) {
+								href = StringUtils.substringBetween(href, "(", ")").replaceAll("'", "").trim();
+								String evntArgmt = href.split(",")[1];
+								String url = requestConf.scraperConfig.get(ScraperConsts.HOST)+"/applications/REPublicInquiry/ListTickets.aspx";
+								try {
+									response = httpWrapper.executeMethod("POST", url, getBasicHttpHeaders(),
+											populateSearchParamsForDetails(responsebodyredem, evntArgmt, ""), null);
+									requestConf.debug("Response from 1st delinquent url \n" + response);
+								} catch (Exception e) {
+									requestConf
+									.debug("Exception in first delinquent response " + e.getLocalizedMessage());
+									requestConf.setExceptionType(e);
+								}
 
-    PropertyAddress propertyAddress = new PropertyAddress();
-    propertyAddress.setAddress(address);
+								String location = httpWrapper.getHeader("Location");
+								url = requestConf.scraperConfig.get(ScraperConsts.HOST) + location;
 
-    GeneralPropertyInformation genralPropertyInformation = new GeneralPropertyInformation();
-    genralPropertyInformation.setPropertyClass(propertyClass);
-    genralPropertyInformation.setLivingUnits(livingUnits);
-    genralPropertyInformation.setZoning(zoning);
-    genralPropertyInformation.setNeighborhood(neighborhood);
-    genralPropertyInformation.setTaxUnit(taxUnit);
+								try {
+									response = httpWrapper.executeMethod("GET", url, getBasicHttpHeaders(), null, null);
+									requestConf.debug("Response from 2nd delinquent url \n" + response);
+								} catch (Exception e) {
+									requestConf
+									.debug("Exception in second delinquent response" + e.getLocalizedMessage());
+									requestConf.setExceptionType(e);
+								}
 
-    DeedInformation deedInformation = new DeedInformation();
-    deedInformation.setDocument1(document1);
-    deedInformation.setDocument2(document2);
+								Document document1 = Jsoup.parse(response);
+								if (document1 != null) {
+									String taxType = null, tax_Supplemental_APN = null, status1 = null,
+											installmentAmt1 = null, interest1 = null, penalty1 = null,
+											amountDue1 = null, datePaid1 = null, DelinquentDate1 = null,
+											delqtaxyear = null, totalTax1 = null, redemptionDate1 = null,
+											redemptionAmount1 = null, VolumeNo1 = null, dueDate1 = null,
+											certOfPurch1 = null, pmtGoodThrough1 = null, assessmentDate1 = null,
+											partialPayAmt1 = null, status2 = null, installmentAmt2 = null,
+											interest2 = null, penalty2 = null, amountDue2 = null, datePaid2 = null,
+											DelinquentDate2 = null, totalTax2 = null, redemptionDate2 = null,
+											redemptionAmount2 = null, VolumeNo2 = null, dueDate2 = null,
+											certOfPurch2 = null, pmtGoodThrough2 = null, assessmentDate2 = null,
+											partialPayAmt2 = null, status3 = null, installmentAmt3 = null,
+											interest3 = null, penalty3 = null, amountDue3 = null, datePaid3 = null,
+											DelinquentDate3 = null, totalTax3 = null, redemptionDate3 = null,
+											redemptionAmount3 = null, VolumeNo3 = null, dueDate3 = null,
+											certOfPurch3 = null, pmtGoodThrough3 = null, assessmentDate3 = null,
+											partialPayAmt3 = null, status4 = null, installmentAmt4 = null,
+											interest4 = null, penalty4 = null, amountDue4 = null, datePaid4 = null,
+											DelinquentDate4 = null, totalTax4 = null, redemptionDate4 = null,
+											redemptionAmount4 = null, VolumeNo4 = null, dueDate4 = null,
+											certOfPurch4 = null, pmtGoodThrough4 = null, assessmentDate4 = null,
+											partialPayAmt4 = null, AOExempt = null, HOExempt = null, LandVal = null,
+											ImpVal = null, NetVal = null, PersPropVal = null;
 
-    TractInformation tractInformation = new TractInformation();
-    tractInformation.setNeighborhood(neighborhood);
-    tractInformation.setTract(tract);
-    tractInformation.setAcres(acres);
-    tractInformation.setMarketAcres(marketAcres);
+									taxType = "Prior Year Annual";
+									status1 = "Paid";
 
-    LanBasedClassificationSystem lanBasedClassificationSystem = new LanBasedClassificationSystem();
-    lanBasedClassificationSystem.setFunction(function);
-    lanBasedClassificationSystem.setActivity(activity);
-    lanBasedClassificationSystem.setOwnerShip(ownership);
-    lanBasedClassificationSystem.setSite(site);
+									amountDue1 = getElementText(
+											document1.getElementById("ctl00_MainContent_TOTALOWED"));
+									delqtaxyear = getElementText(
+											document1.getElementById("ctl00_MainContent_lblDeptDesc"));
+									if (StringUtils.isNotBlank(delqtaxyear)) {
+										delqtaxyear = delqtaxyear.substring(0, 4);
+										installmentAmt1 = getElementText(
+												document1.getElementById("ctl00_MainContent_ORIGBILL"));
+										totalTax1 = getElementText(
+												document1.getElementById("ctl00_MainContent_ORIGBILL"));
+										partialPayAmt1 = getElementText(
+												document1.getElementById("ctl00_MainContent_PAYMENTS"));
+										if (partialPayAmt1.contains("-")) {
+											partialPayAmt1 = partialPayAmt1.replaceAll("-", "");
+										}
+										String penaltyPaid = getElementText(
+												document1.getElementById("ctl00_MainContent_PENPAID"));
+										String interestPaid = getElementText(
+												document1.getElementById("ctl00_MainContent_INTPAID"));
 
-    PropertyFactors propertyFactors = new PropertyFactors();
-    propertyFactors.setTopography(topography);
-    propertyFactors.setUtilities(utilities);
-    propertyFactors.setAccess(access);
-    propertyFactors.setFronting(fronting);
-    propertyFactors.setLocation(location);
-    propertyFactors.setParkingTypes(parkingType);
-    propertyFactors.setParkingQuantity(parkingQuantity);
-    propertyFactors.setParkingproximity(parkingProximity);
-    propertyFactors.setParkingcovered(parkingCovered);
-    propertyFactors.setParkingUncovered(parkingUncovered);
+										partialPayAmt1 = formatAmount("" + (ScraperUtils.getDoubleValue(partialPayAmt1)
+												+ ScraperUtils.getDoubleValue(penaltyPaid)
+												+ ScraperUtils.getDoubleValue(interestPaid)));
+										requestConf.debug("partialPayAmt1 :: " + partialPayAmt1);
+										penalty1 = getElementText(
+												document1.getElementById("ctl00_MainContent_PENALTYCHARGED"));
+										interest1 = getElementText(
+												document1.getElementById("ctl00_MainContent_INTERESTCHARGED"));
+										if (ScraperUtils.getDoubleValue(amountDue1) == 0) {
+											Element element = document1.getElementById("ctl00_MainContent_gvSearch");
+											if (element != null) {
+												Elements elements = element.select("tr");
+												if (!elements.isEmpty()) {
+													for (Element trElement : elements) {
+														if (!trElement.select("td").isEmpty()) {
+															if (getElementText(trElement.select("td").get(1)) != null
+																	&& getElementText(trElement.select("td").get(1))
+																	.equalsIgnoreCase("Payment")) {
+																datePaid1 = getElementText(
+																		trElement.select("td").get(0));
+															}
+														}
+													}
+												}
+											}
+											dueDate1 = getElementText(document1.getElementById("ctl00_MainContent_DueDate"));
+											if (StringUtils.isEmpty(dueDate1)) {
+												dueDate1 = null;
+											}
+											if (StringUtils.isEmpty(datePaid1)) {
+												datePaid1 = null;
+											}
+										}else if (ScraperUtils.getDoubleValue(amount) > 0) {
+											taxType = "Delinquent";
+											status1 = "Delinquent";
+											if (ScraperUtils.getDoubleValue(redmnAmnt) > 0) {
+												redemptionAmount1 = formatAmount(redmnAmnt);
+												redemptionDate1 = ScraperUtils.getLastDayOfCurrentMonth()
+														.replaceAll("/", "-").trim();
+												redmnAmnt = "0.00";
+											}
+										}
+										if (count < 3 || ScraperUtils.getDoubleValue(amount) > 0) {
+											TaxInstallment taxInstallment = TaxInstallment.getTaxInstallmentObject(
+													delqtaxyear, taxType, tax_Supplemental_APN, status1,
+													installmentAmt1, interest1, penalty1, amountDue1, datePaid1,
+													DelinquentDate1, totalTax1, redemptionDate1, redemptionAmount1,
+													VolumeNo1, dueDate1, certOfPurch1, pmtGoodThrough1, assessmentDate1,
+													partialPayAmt1, status2, installmentAmt2, interest2, penalty2,
+													amountDue2, datePaid2, DelinquentDate2, totalTax2, redemptionDate2,
+													redemptionAmount2, VolumeNo2, dueDate2, certOfPurch2,
+													pmtGoodThrough2, assessmentDate2, partialPayAmt2, status3,
+													installmentAmt3, interest3, penalty3, amountDue3, datePaid3,
+													DelinquentDate3, totalTax3, redemptionDate3, redemptionAmount3,
+													VolumeNo3, dueDate3, certOfPurch3, pmtGoodThrough3, assessmentDate3,
+													partialPayAmt3, status4, installmentAmt4, interest4, penalty4,
+													amountDue4, datePaid4, DelinquentDate4, totalTax4, redemptionDate4,
+													redemptionAmount4, VolumeNo4, dueDate4, certOfPurch4,
+													pmtGoodThrough4, assessmentDate4, partialPayAmt4, HOExempt,
+													AOExempt, LandVal, ImpVal, NetVal, PersPropVal);
+											if (ScraperUtils.getDoubleValue(amount) == 0) {
+												taxInstallment.setValueYear(delqtaxyear);
+											}
+											count++;
+											taxInstallmentsList.add(taxInstallment);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 
-    AppraisedValues appraisedValues = new AppraisedValues();
-    appraisedValues.setTaxYear(taxYear);
-    appraisedValues.setPropertyClass(propertyClass);
-    appraisedValues.setLand(land);
-    appraisedValues.setBuilding(building);
-    appraisedValues.setTotal(total);
+		} catch (Exception e) {
+			requestConf.debug("Exception in getDelinquentYearTaxInstallmentList() " + e.getLocalizedMessage());
+			requestConf.setErrorCode(2);
+			requestConf.error("ISSUE IN PROCESSING TIQ-SCRAPE SERVICE");
+			requestConf.setExceptionType(e);
+		}
+	}
 
-    // Set all objects in the RealEstateInformation object
-    realEstateInformation.setOwnerInformation(ownerInformation);
-    realEstateInformation.setPropertyAddress(propertyAddress);
-    realEstateInformation.setGenralPropertyInformation(genralPropertyInformation);
-    realEstateInformation.setDeedInformation(deedInformation);
-    realEstateInformation.setTractInformation(tractInformation);
-    realEstateInformation.setLandBasedClassificationSystem(lanBasedClassificationSystem);
-    realEstateInformation.setPropertyFactors(propertyFactors);
-    realEstateInformation.setAppraisedValues(appraisedValues);
-
-    // Print the RealEstateInformation object for debugging
-    System.out.println("RealEstateInfo: " + realEstateInformation.getOwnerInformation());
-    System.out.println(realEstateInformation.getPropertyAddress());
-    System.out.println(realEstateInformation.getGeneralPropertyInformation());
-    System.out.println(realEstateInformation.getDeedInformation());
-    System.out.println(realEstateInformation.getTractInformation());
-    System.out.println(realEstateInformation.getLandBasedClassificationSystem());
-    System.out.println(realEstateInformation.getPropertyFactors());
-    System.out.println(realEstateInformation.getAppraisedValues());
-
-    return realEstateInformation;
-}
+	
